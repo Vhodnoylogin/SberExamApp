@@ -88,23 +88,23 @@ public class Data {
         return watiszis4;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Data{" +
-//                "id=" + id +
-//                ", airport='" + airport + '\'' +
-//                ", city='" + city + '\'' +
-//                ", country='" + country + '\'' +
-//                ", IATA='" + IATA + '\'' +
-//                ", ICAO='" + ICAO + '\'' +
-//                ", latitude=" + latitude +
-//                ", longitude=" + longitude +
-//                ", watiszis1=" + watiszis1 +
-//                ", watiszis2=" + watiszis2 +
-//                ", watiszis3='" + watiszis3 + '\'' +
-//                ", timeZoneName='" + timeZoneName + '\'' +
-//                ", type='" + type + '\'' +
-//                ", watiszis4='" + watiszis4 + '\'' +
-//                '}';
-//    }
+    @Override
+    public String toString() {
+        return "Data{" +
+                "id=" + id +
+                ", airport='" + airport + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", IATA='" + IATA + '\'' +
+                ", ICAO='" + ICAO + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", watiszis1=" + watiszis1 +
+                ", watiszis2=" + watiszis2 +
+                ", watiszis3='" + watiszis3 + '\'' +
+                ", timeZoneName='" + timeZoneName + '\'' +
+                ", type='" + type + '\'' +
+                ", watiszis4='" + watiszis4 + '\'' +
+                '}';
+    }
 }

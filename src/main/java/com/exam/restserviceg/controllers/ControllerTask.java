@@ -11,13 +11,8 @@ import java.util.List;
 
 @RestController
 public class ControllerTask {
-
     @GetMapping("/airports")
     public List<Data> getAllRows() throws IOException {
-//        return new ArrayList<>() {{
-//            add(new Data());
-//            add(new Data());
-//        }};
         return LookupOnAirportsFile.getAllData();
     }
 

@@ -1,4 +1,4 @@
-package com.exam.restserviceg.app;
+package com.exam.restserviceg;
 
 
 import org.apache.logging.log4j.LogManager;

@@ -1,6 +1,7 @@
 package com.exam.restserviceg.controllers;
 
 import com.exam.restserviceg.models.Greeting;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +13,7 @@ public class GreetingController {
     protected static final String template = "Hello, %s!";
     protected final AtomicLong counter = new AtomicLong();
 
+    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/greeting")
     public Greeting greeting(
             @RequestParam(value = "name", defaultValue = "World") String name

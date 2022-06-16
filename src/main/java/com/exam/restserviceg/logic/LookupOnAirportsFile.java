@@ -27,6 +27,7 @@ public class LookupOnAirportsFile {
             ).getFile();
             cashedFile = new CsvToBeanBuilder<Data>(new FileReader(f))
                     .withType(Data.class)
+                    .withIgnoreEmptyLine(true)
                     .build()
                     .stream()
                     .collect(Collectors.toMap(

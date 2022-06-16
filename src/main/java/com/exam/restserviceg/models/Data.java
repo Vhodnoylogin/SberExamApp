@@ -1,33 +1,35 @@
 package com.exam.restserviceg.models;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 public class Data {
-//    @CsvBindByPosition(position = 0)
+    @CsvBindByPosition(position = 0)
     protected Long id;
-    //    @CsvBindByPosition(position = 1)
+    @CsvBindByPosition(position = 1)
     protected String airport;
-    //    @CsvBindByPosition(position = 2)
+    @CsvBindByPosition(position = 2)
     protected String city;
-    //    @CsvBindByPosition(position = 3)
+    @CsvBindByPosition(position = 3)
     protected String country;
-    //    @CsvBindByPosition(position = 4)
+    @CsvBindByPosition(position = 4)
     protected String IATA;
-    //    @CsvBindByPosition(position = 5)
+    @CsvBindByPosition(position = 5)
     protected String ICAO;
-    //    @CsvBindByPosition(position = 6)
+    @CsvBindByPosition(position = 6)
     protected Double latitude;
-    //    @CsvBindByPosition(position = 7)
+    @CsvBindByPosition(position = 7)
     protected Double longitude;
-    //    @CsvBindByPosition(position = 8)
+    @CsvBindByPosition(position = 8)
     protected Double watiszis1;
-    //    @CsvBindByPosition(position = 9)
+    @CsvBindByPosition(position = 9)
     protected Double watiszis2;
-    //    @CsvBindByPosition(position = 10)
+    @CsvBindByPosition(position = 10)
     protected String watiszis3;
-    //    @CsvBindByPosition(position = 11)
+    @CsvBindByPosition(position = 11)
     protected String timeZoneName;
-    //    @CsvBindByPosition(position = 12)
+    @CsvBindByPosition(position = 12)
     protected String type;
-    //    @CsvBindByPosition(position = 13)
+    @CsvBindByPosition(position = 13)
     protected String watiszis4;
 
     public long getId() {

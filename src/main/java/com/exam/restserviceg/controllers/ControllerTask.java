@@ -1,6 +1,7 @@
 package com.exam.restserviceg.controllers;
 
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
+import com.exam.restserviceg.logic.exceptions.NoSuchRecordException;
 import com.exam.restserviceg.models.Data;
 import com.exam.restserviceg.models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -21,8 +23,8 @@ public class ControllerTask {
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/airports")
     public Wrapper<Data> getAllRows(
-            @RequestParam UUID uuid
-            , @RequestParam Map<String, String> parameters
+            @RequestParam(required = false) UUID uuid
+            , @RequestParam(required = false) Map<String, String> parameters
     ) throws IOException {
         logger.debug("Debugging log: getAllRows()");
         Wrapper<String> req = Wrapper.wrap("/airports");
@@ -39,8 +41,8 @@ public class ControllerTask {
     @GetMapping("/airports/{id}")
     public Wrapper<Data> getOneRow(
             @PathVariable String id
-            , @RequestParam UUID uuid
-            , @RequestParam Map<String, String> parameters
+            , @RequestParam(required = false) UUID uuid
+            , @RequestParam(required = false) Map<String, String> parameters
     ) throws IOException {
         logger.debug("Debugging log: getOneRow(" + id + ")");
         Wrapper<String> req = Wrapper.wrap("/airports");
@@ -48,8 +50,10 @@ public class ControllerTask {
         parameters.forEach(req::addTexInfo);
         logger.info(req);
 
-        Wrapper<Data> resp = Wrapper.wrap(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
+        Wrapper<Data> resp = Wrapper.wrap();
         resp.addTexInfo("request", req);
+        Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
+        res.ifPresentOrElse(resp::setContent, () -> resp.addTexInfo("error", new NoSuchRecordException(id)));
         return resp;
     }
 }

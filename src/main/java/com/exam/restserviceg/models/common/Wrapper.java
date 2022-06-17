@@ -39,6 +39,10 @@ public class Wrapper<T> {
         return wrap(() -> data);
     }
 
+    public static <R> Wrapper<R> wrap() {
+        return wrap(ArrayList::new);
+    }
+
     public void setId(UUID id) {
         this.id = id;
     }
@@ -53,6 +57,12 @@ public class Wrapper<T> {
 
     public void setContent(List<T> content) {
         this.content = content;
+    }
+
+    public void setContent(T content) {
+        List<T> list = new ArrayList<>();
+        list.add(content);
+        this.content = list;
     }
 
     public Map<String, Object> getTexInfo() {

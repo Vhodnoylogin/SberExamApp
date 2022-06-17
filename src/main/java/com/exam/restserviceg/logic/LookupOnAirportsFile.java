@@ -30,7 +30,7 @@ public class LookupOnAirportsFile {
                     .withIgnoreEmptyLine(true)
                     .build()
                     .stream()
-                    .filter(x -> x.getId() == null)
+                    .filter(x -> x.getId() != null)
                     .collect(Collectors.toMap(
                             Data::getId
                             , x -> x)

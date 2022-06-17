@@ -48,7 +48,7 @@ public class ControllerTask {
     }
 
     //    @ExceptionHandler(RuntimeException.class)
-    @GetMapping("/airports/{id}")
+    @GetMapping("/airports/{id:[\\d]+}")
     public Wrapper<Data> getOneRow(
             @PathVariable("id") String id
             , @RequestParam(required = false) UUID uuid
@@ -70,7 +70,7 @@ public class ControllerTask {
             });
             logger.info(resp);
             return resp;
-        } catch (IOException | NoSuchRecordException e) {
+        } catch (IOException | NoSuchRecordException | NumberFormatException e) {
             resp = ErrorWrapper.wrap(e);
             resp.addTexInfo("request", req);
             logger.info(resp);

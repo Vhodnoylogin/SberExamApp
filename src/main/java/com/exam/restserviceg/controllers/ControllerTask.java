@@ -1,7 +1,7 @@
 package com.exam.restserviceg.controllers;
 
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
-import com.exam.restserviceg.logic.exceptions.NoSuchRecordException;
+import com.exam.restserviceg.logic.exceptions.RecordNotFoundException;
 import com.exam.restserviceg.models.Data;
 import com.exam.restserviceg.models.common.ErrorWrapper;
 import com.exam.restserviceg.models.common.Wrapper;
@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +25,8 @@ public class ControllerTask {
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/airports")
     public Wrapper<Data> getAllRows(
-            @RequestParam(required = false) UUID uuid
+            HttpServletRequest request
+            , @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("Debugging log: getAllRows()");
@@ -50,7 +52,8 @@ public class ControllerTask {
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/airports/{id:[\\d]+}")
     public Wrapper<Data> getOneRow(
-            @PathVariable("id") String id
+            HttpServletRequest request
+            , @PathVariable("id") String id
             , @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
@@ -66,11 +69,11 @@ public class ControllerTask {
             resp.addTexInfo("request", req);
             Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
             res.ifPresentOrElse(resp::setContent, () -> {
-                throw new NoSuchRecordException(id);
+                throw new RecordNotFoundException(id);
             });
             logger.info(resp);
             return resp;
-        } catch (IOException | NoSuchRecordException | NumberFormatException e) {
+        } catch (IOException | RecordNotFoundException | NumberFormatException e) {
             resp = ErrorWrapper.wrap(e);
             resp.addTexInfo("request", req);
             logger.info(resp);

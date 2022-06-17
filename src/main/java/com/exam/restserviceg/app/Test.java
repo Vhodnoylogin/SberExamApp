@@ -1,7 +1,7 @@
 package com.exam.restserviceg.app;
 
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
-import com.exam.restserviceg.logic.exceptions.NoSuchRecordException;
+import com.exam.restserviceg.logic.exceptions.RecordNotFoundException;
 import com.exam.restserviceg.models.Data;
 
 import java.io.IOException;
@@ -10,25 +10,25 @@ public class Test {
     public static void main(String[] args) {
         Data qql;
         try {
-            qql = LookupOnAirportsFile.getDataById(1l);
+            qql = LookupOnAirportsFile.getDataById(1L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(2l);
+            qql = LookupOnAirportsFile.getDataById(2L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(3l);
+            qql = LookupOnAirportsFile.getDataById(3L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(7l);
+            qql = LookupOnAirportsFile.getDataById(7L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(10l);
+            qql = LookupOnAirportsFile.getDataById(10L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(15l);
+            qql = LookupOnAirportsFile.getDataById(15L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(17l);
+            qql = LookupOnAirportsFile.getDataById(17L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(19l);
+            qql = LookupOnAirportsFile.getDataById(19L);
             System.out.println(qql);
-            qql = LookupOnAirportsFile.getDataById(240000l);
+            qql = LookupOnAirportsFile.getDataById(240000L);
             System.out.println(qql);
-        } catch (IOException | NoSuchRecordException e) {
+        } catch (IOException | RecordNotFoundException e) {
             e.printStackTrace();
         }
 

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
@@ -18,11 +19,20 @@ public class GreetingExtendedController {
     @ExceptionHandler(RuntimeException.class)
     @GetMapping("/greeting")
     public Wrapper<Void> greeting(
-            @RequestParam(required = false) Map<String, String> parameters
+            HttpServletRequest request
+            , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("greeting");
+
+        logger.debug("Debugging log: getAllRows()");
+        Wrapper<String> req = Wrapper.wrap("/airports");
+        parameters.forEach(req::addTexInfo);
+        logger.info(req);
+
         Wrapper<Void> resp = Wrapper.wrap((Void) null);
-        parameters.forEach(resp::addTexInfo);
+        resp.addTexInfo("request", req);
+        resp.addTexInfo("URL", request.getServletPath());
+        request.getParameterMap().forEach(resp::addTexInfo);
         return resp;
     }
 }

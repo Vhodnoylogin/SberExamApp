@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
@@ -19,7 +20,8 @@ public class RootController {
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/")
     public Greeting greeting(
-            @RequestParam(value = "name", defaultValue = "World") String name
+            HttpServletRequest request
+            , @RequestParam(value = "name", defaultValue = "World") String name
     ) {
         logger.debug("greeting");
         return new Greeting(

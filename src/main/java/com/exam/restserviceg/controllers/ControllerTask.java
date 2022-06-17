@@ -2,9 +2,7 @@ package com.exam.restserviceg.controllers;
 
 import com.exam.restserviceg.controllers.decorator.NeDecorator;
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
-import com.exam.restserviceg.logic.exceptions.RecordNotFoundException;
 import com.exam.restserviceg.models.Data;
-import com.exam.restserviceg.models.common.ErrorWrapper;
 import com.exam.restserviceg.models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,9 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -65,22 +61,22 @@ public class ControllerTask {
 //        logger.info(req);
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
 
-//        return NeDecorator.buildResponse(LookupOnAirportsFile::getAllData, logger,req);
-        Wrapper<Data> resp;
-        try {
-            resp = Wrapper.wrap();
-            resp.addTexInfo("request", req);
-            Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
-            res.ifPresentOrElse(resp::setContent, () -> {
-                throw new RecordNotFoundException(id);
-            });
-            logger.info(resp);
-            return resp;
-        } catch (IOException | RecordNotFoundException | NumberFormatException e) {
-            resp = ErrorWrapper.wrap(e);
-            resp.addTexInfo("request", req);
-            logger.info(resp);
-            return resp;
-        }
+        return NeDecorator.buildResponseList(LookupOnAirportsFile::getAllData, logger, req);
+//        Wrapper<Data> resp;
+//        try {
+//            resp = Wrapper.wrap();
+//            resp.addTexInfo("request", req);
+//            Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
+//            res.ifPresentOrElse(resp::setContent, () -> {
+//                throw new RecordNotFoundException(id);
+//            });
+//            logger.info(resp);
+//            return resp;
+//        } catch (IOException | RecordNotFoundException | NumberFormatException e) {
+//            resp = ErrorWrapper.wrap(e);
+//            resp.addTexInfo("request", req);
+//            logger.info(resp);
+//            return resp;
+//        }
     }
 }

@@ -3,6 +3,7 @@ package com.exam.restserviceg.controllers;
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
 import com.exam.restserviceg.logic.exceptions.NoSuchRecordException;
 import com.exam.restserviceg.models.Data;
+import com.exam.restserviceg.models.common.ErrorWrapper;
 import com.exam.restserviceg.models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,35 +26,55 @@ public class ControllerTask {
     public Wrapper<Data> getAllRows(
             @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
-    ) throws IOException {
+    ) {
         logger.debug("Debugging log: getAllRows()");
         Wrapper<String> req = Wrapper.wrap("/airports");
-        req.setId(uuid);
+        req.setUuid(uuid);
         parameters.forEach(req::addTexInfo);
         logger.info(req);
 
-        Wrapper<Data> resp = Wrapper.wrap(LookupOnAirportsFile.getAllData());
-        resp.addTexInfo("request", req);
-        return resp;
+        Wrapper<Data> resp;
+        try {
+            resp = Wrapper.wrap(LookupOnAirportsFile.getAllData());
+            resp.addTexInfo("request", req);
+            logger.info(resp);
+            return resp;
+        } catch (IOException e) {
+            resp = ErrorWrapper.wrap(e);
+            resp.addTexInfo("request", req);
+            logger.info(resp);
+            return resp;
+        }
     }
 
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/airports/{id}")
     public Wrapper<Data> getOneRow(
-            @PathVariable String id
+            @PathVariable("id") String id
             , @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
-    ) throws IOException {
+    ) {
         logger.debug("Debugging log: getOneRow(" + id + ")");
         Wrapper<String> req = Wrapper.wrap("/airports");
-        req.setId(uuid);
+        req.setUuid(uuid);
         parameters.forEach(req::addTexInfo);
         logger.info(req);
 
-        Wrapper<Data> resp = Wrapper.wrap();
-        resp.addTexInfo("request", req);
-        Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
-        res.ifPresentOrElse(resp::setContent, () -> resp.addTexInfo("error", new NoSuchRecordException(id)));
-        return resp;
+        Wrapper<Data> resp;
+        try {
+            resp = Wrapper.wrap();
+            resp.addTexInfo("request", req);
+            Optional<Data> res = Optional.ofNullable(LookupOnAirportsFile.getDataById(Long.valueOf(id)));
+            res.ifPresentOrElse(resp::setContent, () -> {
+                throw new NoSuchRecordException(id);
+            });
+            logger.info(resp);
+            return resp;
+        } catch (IOException | NoSuchRecordException e) {
+            resp = ErrorWrapper.wrap(e);
+            resp.addTexInfo("request", req);
+            logger.info(resp);
+            return resp;
+        }
     }
 }

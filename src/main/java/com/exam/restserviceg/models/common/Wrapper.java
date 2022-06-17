@@ -6,26 +6,29 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class Wrapper<T> {
-    protected UUID id = UUID.randomUUID();
-
+    protected UUID uuid;
     protected LocalDateTime timestamp;
-//    protected LocalDateTime resTimestamp;
 
     protected List<T> content;
     protected Long contentSize;
 
-    protected Map<String, Object> texInfo = new HashMap<>();
+    protected Map<String, Object> texInfo;
 
-    public UUID getId() {
-        return id;
+    protected Wrapper() {
+        this.timestamp = LocalDateTime.now();
+        this.uuid = UUID.randomUUID();
+        this.texInfo = new HashMap<>();
     }
 
-    protected static <R> Wrapper<R> wrap(Supplier<List<R>> data) {
-        Wrapper<R> wrapper = new Wrapper<>();
-        wrapper.timestamp = LocalDateTime.now();
+    protected static <R, W extends Wrapper<R>> W wrap(Supplier<W> gen, Supplier<List<R>> data) {
+        W wrapper = gen.get();
         wrapper.setContent(data.get());
         wrapper.contentSize = (long) Optional.of(wrapper.content.size()).orElse(0);
         return wrapper;
+    }
+
+    public static <R> Wrapper<R> wrap(List<R> data) {
+        return wrap(Wrapper::new, () -> data);
     }
 
     public static <R> Wrapper<R> wrap(R data) {
@@ -35,16 +38,16 @@ public class Wrapper<T> {
         return wrap(list);
     }
 
-    public static <R> Wrapper<R> wrap(List<R> data) {
-        return wrap(() -> data);
-    }
-
     public static <R> Wrapper<R> wrap() {
-        return wrap(ArrayList::new);
+        return wrap(Wrapper::new, ArrayList::new);
     }
 
-    public void setId(UUID id) {
-        this.id = id;
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 
     public LocalDateTime getTimestamp() {
@@ -80,7 +83,7 @@ public class Wrapper<T> {
     @Override
     public String toString() {
         return "Wrapper{" +
-                "id=" + id +
+                "id=" + uuid +
                 ", timestamp=" + timestamp +
                 ", content=" + content +
                 ", contentSize=" + contentSize +

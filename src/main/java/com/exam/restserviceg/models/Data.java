@@ -32,7 +32,7 @@ public class Data {
     @CsvBindByPosition(position = 13)
     protected String watiszis4;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

@@ -1,5 +1,6 @@
 package com.exam.restserviceg.controllers;
 
+import com.exam.restserviceg.controllers.decorator.NeDecorator;
 import com.exam.restserviceg.logic.LookupOnAirportsFile;
 import com.exam.restserviceg.logic.exceptions.RecordNotFoundException;
 import com.exam.restserviceg.models.Data;
@@ -26,27 +27,27 @@ public class ControllerTask {
     @GetMapping("/airports")
     public Wrapper<Data> getAllRows(
             HttpServletRequest request
-            , @RequestParam(required = false) UUID uuid
-            , @RequestParam(required = false) Map<String, String> parameters
+//            , @RequestParam(required = false) UUID uuid
+//            , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("Debugging log: getAllRows()");
-        Wrapper<String> req = Wrapper.wrap("/airports");
-        req.setUuid(uuid);
-        parameters.forEach(req::addTexInfo);
-        logger.info(req);
+//        Wrapper<String> req = Wrapper.wrap(request.getServletPath());
+//        req.setUuid(uuid);
+//        parameters.forEach(req::addTexInfo);
+//        logger.info(req);
+        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
 
-        Wrapper<Data> resp;
-        try {
-            resp = Wrapper.wrap(LookupOnAirportsFile.getAllData());
-            resp.addTexInfo("request", req);
-            logger.info(resp);
-            return resp;
-        } catch (IOException e) {
-            resp = ErrorWrapper.wrap(e);
-            resp.addTexInfo("request", req);
-            logger.info(resp);
-            return resp;
-        }
+//        Wrapper<Data> resp;
+//        try {
+//            resp = Wrapper.wrap(LookupOnAirportsFile.getAllData());
+//        } catch (IOException e) {
+//            resp = ErrorWrapper.wrap(e);
+//        }
+//        resp.addTexInfo("request", req);
+//        logger.info(resp);
+//        return resp;
+
+        return NeDecorator.buildResponseList(LookupOnAirportsFile::getAllData, logger, req);
     }
 
     //    @ExceptionHandler(RuntimeException.class)
@@ -58,11 +59,13 @@ public class ControllerTask {
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("Debugging log: getOneRow(" + id + ")");
-        Wrapper<String> req = Wrapper.wrap("/airports");
-        req.setUuid(uuid);
-        parameters.forEach(req::addTexInfo);
-        logger.info(req);
+//        Wrapper<String> req = Wrapper.wrap("/airports");
+//        req.setUuid(uuid);
+//        parameters.forEach(req::addTexInfo);
+//        logger.info(req);
+        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
 
+//        return NeDecorator.buildResponse(LookupOnAirportsFile::getAllData, logger,req);
         Wrapper<Data> resp;
         try {
             resp = Wrapper.wrap();

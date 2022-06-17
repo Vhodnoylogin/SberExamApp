@@ -27,7 +27,7 @@ public class Wrapper<T> {
         return wrapper;
     }
 
-    public static <R> Wrapper<R> wrap(List<R> data) {
+    public static <R, L extends List<R>> Wrapper<R> wrap(L data) {
         return wrap(Wrapper::new, () -> data);
     }
 

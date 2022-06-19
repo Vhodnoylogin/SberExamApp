@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class ErrorPageController implements ErrorController {
-
     protected static final Logger logger = LogManager.getLogger(ErrorPageController.class);
 
-    //    @ExceptionHandler(RuntimeException.class)
     @RequestMapping("/error")
     public String errorPage() {
         logger.debug("errorPage");

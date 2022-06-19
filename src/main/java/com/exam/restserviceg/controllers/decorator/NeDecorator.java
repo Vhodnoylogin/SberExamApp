@@ -7,39 +7,74 @@ import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+
+// хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
+// пусть пока будет так.
 public class NeDecorator {
+    // создает объект на основе данных пришедшего запроса
     public static Wrapper<String> buildRequest(HttpServletRequest request, Logger logger) {
         Wrapper<String> req = Wrapper.wrap(request.getServletPath());
-        req.setUuid(UUID.fromString(request.getParameter("uuid")));
-        request.getParameterMap().forEach((k, v) -> req.addTexInfo(k, v[0]));
+        Optional
+                .ofNullable(request.getParameter("uuid"))
+                .map(UUID::fromString)
+                .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
+        request.getParameterMap().forEach(
+                (k, v) -> req.addTexInfo(k, v[0])
+        );
         logger.info(req);
 
         return req;
     }
 
-    public static <T> Wrapper<T> buildResponse(SupplierWithException<T> act, Logger logger, Wrapper<?> req) {
-        Wrapper<T> resp;
+    protected static <T> Wrapper<T> createWrap(SupplierWithException<T> act) {
         try {
-            resp = Wrapper.wrap(act.action());
+            return Wrapper.wrap(act.action());
         } catch (Exception e) {
-            resp = ErrorWrapper.wrap(e);
+            return ErrorWrapper.wrap(e);
         }
-        resp.addTexInfo("request", req);
-        logger.info(resp);
-        return resp;
     }
 
-    public static <T, R extends List<T>> Wrapper<T> buildResponseList(SupplierWithException<R> act, Logger logger, Wrapper<?> req) {
-        Wrapper<T> resp;
+    protected static <T, L extends List<T>> Wrapper<T> createWrapL(SupplierWithException<L> act) {
         try {
-            resp = Wrapper.wrap(act.action());
+            return Wrapper.wrap(act.action());
         } catch (Exception e) {
-            resp = ErrorWrapper.wrap(e);
+            return ErrorWrapper.wrap(e);
         }
-        resp.addTexInfo("request", req);
-        logger.info(resp);
-        return resp;
+    }
+
+    protected static <T> Wrapper<T> addInfo(Wrapper<T> wrapper, Logger logger, Wrapper<?> req, Map<String, ?> map) {
+        if (map != null) {
+            map.forEach(wrapper::addTexInfo);
+        }
+        wrapper.addTexInfo("request", req);
+        logger.info(wrapper);
+        return wrapper;
+    }
+
+    // получаем данные и оборачиваем ответ в обертку для красоты исполнения
+    public static <T> Wrapper<T> buildResponse(SupplierWithException<T> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
+        Wrapper<T> resp = createWrap(act);
+        return addInfo(resp, logger, req, map);
+    }
+
+    // то же самое, но если данные - список
+    public static <T, R extends List<T>> Wrapper<T> buildResponseList(SupplierWithException<R> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
+        Wrapper<T> resp = createWrapL(act);
+        return addInfo(resp, logger, req, map);
+    }
+
+    public static <T> Wrapper<T> buildResponse(SupplierWithException<T> act, Logger logger, Wrapper<?> req) {
+        Wrapper<T> resp = createWrap(act);
+        return addInfo(resp, logger, req, null);
+    }
+
+    // то же самое, но если данные - список
+    public static <T, R extends List<T>> Wrapper<T> buildResponseList(SupplierWithException<R> act, Logger logger, Wrapper<?> req) {
+        Wrapper<T> resp = createWrapL(act);
+        return addInfo(resp, logger, req, null);
     }
 }

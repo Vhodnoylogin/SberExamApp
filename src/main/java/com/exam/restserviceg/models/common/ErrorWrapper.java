@@ -2,7 +2,7 @@ package com.exam.restserviceg.models.common;
 
 import java.util.ArrayList;
 
-public class ErrorWrapper<T> extends Wrapper<T> {
+public class ErrorWrapper<T> extends Wrapper<T> implements IWrapper<T> {
     protected Throwable error;
 
     public static <R> ErrorWrapper<R> wrap(Throwable e) {

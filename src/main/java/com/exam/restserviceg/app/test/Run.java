@@ -18,15 +18,24 @@ public class Run {
         Father s = new Son();
         Father d = new Dauther();
 
-        f(f);
-        f(s);
-        f(d);
+//        f(f);
+//        f(s);
+//        f(d);
+
+        f.run();
+        s.run();
+        d.run();
     }
 
     public static class Dauther extends Father {
     }
 
     public static class Father {
+        public void run() {
+            System.out.println(this.getClass());
+            System.out.println(this.getClass().getEnclosingClass());
+            System.out.println(this.getClass().getEnclosingConstructor());
+        }
     }
 
     public static class Son extends Father {

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class Wrapper<T> {
+public class Wrapper<T> implements IWrapper<T> {
     protected UUID uuid;
     protected LocalDateTime timestamp;
 
@@ -83,7 +83,7 @@ public class Wrapper<T> {
     @Override
     public String toString() {
         return "Wrapper{" +
-                "id=" + uuid +
+                "uuid=" + uuid +
                 ", timestamp=" + timestamp +
                 ", content=" + content +
                 ", contentSize=" + contentSize +

@@ -1,9 +1,9 @@
 package com.exam.restserviceg.controllers;
 
+import com.exam.restserviceg.controllers.decorator.NeDecorator;
 import com.exam.restserviceg.models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,26 +13,20 @@ import java.util.Map;
 
 @RestController
 public class GreetingExtendedController {
+    protected final String PATH_BASE = "/greeting";
 
     protected static final Logger logger = LogManager.getLogger(GreetingExtendedController.class);
 
-    @ExceptionHandler(RuntimeException.class)
-    @GetMapping("/greeting")
+    //    @ExceptionHandler(RuntimeException.class)
+    @GetMapping(PATH_BASE)
     public Wrapper<Void> greeting(
             HttpServletRequest request
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("greeting");
+        logger.debug(request.getServletPath());
 
-        logger.debug("Debugging log: getAllRows()");
-        Wrapper<String> req = Wrapper.wrap("/airports");
-        parameters.forEach(req::addTexInfo);
-        logger.info(req);
-
-        Wrapper<Void> resp = Wrapper.wrap((Void) null);
-        resp.addTexInfo("request", req);
-        resp.addTexInfo("URL", request.getServletPath());
-        request.getParameterMap().forEach(resp::addTexInfo);
-        return resp;
+        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
+        return NeDecorator.buildResponse(() -> null, logger, req, parameters);
     }
 }

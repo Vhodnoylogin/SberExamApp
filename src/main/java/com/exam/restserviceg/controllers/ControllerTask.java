@@ -42,6 +42,6 @@ public class ControllerTask {
     ) {
         logger.debug("Debugging log: getOneRow(" + id + ")");
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-        return NeDecorator.buildResponseList(LookupOnAirportsFile::getAllData, logger, req);
+        return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req);
     }
 }

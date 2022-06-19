@@ -1,5 +1,6 @@
 package com.exam.restserviceg.logic;
 
+import com.exam.restserviceg.logic.exceptions.RecordNotFoundException;
 import com.exam.restserviceg.models.Data;
 import com.opencsv.bean.CsvToBeanBuilder;
 import org.springframework.core.io.ClassPathResource;
@@ -39,9 +40,10 @@ public class LookupOnAirportsFile {
         return cashedFile;
     }
 
-    public static Optional<Data> getDataById(Long id) throws IOException {
+    public static Data getDataById(Long id) throws IOException {
         return Optional
-                .ofNullable(getFromFile().get(id));
+                .ofNullable(getFromFile().get(id))
+                .orElseThrow(() -> new RecordNotFoundException(id));
 
     }
 

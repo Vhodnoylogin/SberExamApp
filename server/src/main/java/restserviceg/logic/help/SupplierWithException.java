@@ -1,0 +1,6 @@
+package restserviceg.logic.help;
+
+@FunctionalInterface
+public interface SupplierWithException<T> {
+    T action() throws Exception;
+}

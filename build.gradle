@@ -8,41 +8,84 @@ group = 'com.exam'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
+
+def javaProjects = [
+        project(":sharedtypes"),
+        project(":client"),
+        project(":server")
+]
+
 repositories {
     mavenCentral()
 }
 
-dependencyManagement {
-    imports {
-        mavenBom 'org.apache.logging.log4j:log4j-bom:2.17.2'
+configure(javaProjects) {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom 'org.apache.logging.log4j:log4j-bom:2.17.2'
+        }
+    }
+    dependencies {
+        implementation group: 'com.opencsv', name: 'opencsv', version: '5.6'
+
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+//    implementation 'org.springframework.boot:spring-boot-devtools'
+//        developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+//    implementation  group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.2'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
     }
 }
 
-dependencies {
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.6'
-
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-devtools'
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-
-
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
-//    implementation  group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.2'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-//build.gradledependencies {
-//    testRuntime("org.junit.jupiter:junit-jupiter-api:5.8.1")
-//    testRuntime("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-//    testRuntime("org.junit.jupiter:junit-jupiter-params:5.8.1")
-//    testRuntime("org.junit.platform:junit-platform-suite:1.8.1")
-//}
-//test {
-//    useJUnitPlatform()
+//repositories {
+//    mavenCentral()
 //}
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//subprojects {
+//    apply plugin: 'java'
+////    apply plugin: 'io.spring.dependency-management'
+////    apply plugin: 'java-library'
+//
+//    repositories {
+//        mavenCentral()
+//    }
+//
+//    dependencyManagement {
+//        imports {
+//            mavenBom 'org.apache.logging.log4j:log4j-bom:2.17.2'
+//        }
+//    }
+//
+//    dependencies {
+//        implementation group: 'com.opencsv', name: 'opencsv', version: '5.6'
+//
+//        implementation 'org.springframework.boot:spring-boot-starter-web'
+////    implementation 'org.springframework.boot:spring-boot-devtools'
+////        developmentOnly("org.springframework.boot:spring-boot-devtools")
+//
+//
+//        implementation group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
+//        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
+////    implementation  group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.17.2'
+//
+//        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//    }
+//
+//}

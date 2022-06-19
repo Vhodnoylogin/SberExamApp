@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="com.exam.restserviceg.RestServiceGApplication" type="Application"
-                   factoryName="Application" nameIsGenerated="true">
+    <configuration default="false" name="RestServiceGApplication" type="Application" factoryName="Application"
+                   nameIsGenerated="true">
         <option name="MAIN_CLASS_NAME" value="com.exam.restserviceg.RestServiceGApplication"/>
         <module name="rest-service-g.main"/>
         <extension name="coverage">
             <pattern>
-                <option name="PATTERN" value="com.exam.restserviceg.app.*"/>
+                <option name="PATTERN" value="com.exam.restserviceg.tests.*"/>
                 <option name="ENABLED" value="true"/>
             </pattern>
         </extension>

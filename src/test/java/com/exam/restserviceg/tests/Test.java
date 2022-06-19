@@ -1,4 +1,4 @@
-package com.exam.restserviceg.app;
+package com.exam.restserviceg.tests;
 
 import com.exam.restserviceg.models.Data;
 

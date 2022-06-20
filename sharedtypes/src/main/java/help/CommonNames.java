@@ -24,7 +24,8 @@ public class CommonNames {
 
         public static final String PARAM_REQUEST = "request";
 
-        public static final String PARAM_SERVER_TIMESTAMP = "serverTimestamp";
+        public static final String PARAM_CLIENT_TIMESTAMP = "clientTimestamp";
+        public static final String PARAM_CLIENT_UUID = "clientUUID";
     }
 
 

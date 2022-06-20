@@ -1,13 +1,13 @@
 package restserviceg.controllers.decorator;
 
 import help.CommonNames;
+import help.MyTimestamp;
 import models.common.ErrorWrapper;
 import models.common.Wrapper;
 import org.apache.logging.log4j.Logger;
 import restserviceg.logic.help.SupplierWithException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,22 +22,33 @@ public class NeDecorator {
     // создает объект на основе данных пришедшего запроса
     public static Wrapper<String> buildRequest(HttpServletRequest request, Logger logger) {
         Wrapper<String> req = Wrapper.wrap(request.getServletPath());
-        Optional
+
+        Optional<UUID> uuid = Optional
                 .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_UUID))
-                .map(UUID::fromString)
-                .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
+                .map(UUID::fromString);
+//                .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
+        uuid.ifPresent(req::setUuid);
+
 //        // надо ли в обертку запроса добавлять все параметры, с которыми оно было запущено?
 //        request.getParameterMap().forEach(
 //                (k, v) -> req.addTechInfo(k, v[0])
 //        );
+
+
         // ставим клиентскй таймстемп, если он есть в значение таймстемпа
-        req.setTimestamp(
-                request.getParameterMap().getOrDefault(
-                        CommonNames.Params.PARAM_TIMESTAMP
-                        , new String[]{null}
-                )[0]);
-        // ставим в techInfo значение серверного таймстемпа, когда пришел запрос на сервер
-        req.addTechInfo(CommonNames.Params.PARAM_SERVER_TIMESTAMP, LocalDateTime.now());
+//        req.setTimestamp(
+//                request.getParameterMap().getOrDefault(
+//                        CommonNames.Params.PARAM_TIMESTAMP
+//                        , new String[]{null}
+//                )[0]);
+
+        // ставим в techInfo значение клиентского таймстемпа
+        req.addTechInfo(CommonNames.Params.PARAM_CLIENT_UUID, uuid.orElse(null));
+        // ставим в techInfo значение клиентского таймстемпа
+        req.addTechInfo(
+                CommonNames.Params.PARAM_CLIENT_TIMESTAMP
+                , MyTimestamp.parse(request.getParameter(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP))
+        );
 //        try {
 //            LocalDateTime timestamp = LocalDateTime.parse(
 //                    request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]

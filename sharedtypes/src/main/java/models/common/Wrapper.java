@@ -3,6 +3,7 @@ package models.common;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import help.CommonNames;
+import help.MyTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -27,6 +28,7 @@ public class Wrapper<T> implements IWrapper<T> {
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
+        if (timestamp == null) return;
         this.timestamp = timestamp;
     }
 
@@ -43,15 +45,8 @@ public class Wrapper<T> implements IWrapper<T> {
         return wrapper;
     }
 
-    public void setTimestamp(String sTimestamp) {
-        try {
-            this.timestamp = LocalDateTime.parse(
-                    sTimestamp
-                    , help.MyTimestamp.TIMESTAMP_FORMAT
-            );
-        } catch (Exception e) {
-            this.timestamp = null;
-        }
+    public void setTimestamp(String timestamp) {
+        this.setTimestamp(MyTimestamp.parse(timestamp));
     }
 
     public static <R, L extends List<R>> Wrapper<R> wrap(L data) {
@@ -74,6 +69,7 @@ public class Wrapper<T> implements IWrapper<T> {
     }
 
     public void setUuid(UUID uuid) {
+        if (uuid == null) return;
         this.uuid = uuid;
     }
 
@@ -105,7 +101,6 @@ public class Wrapper<T> implements IWrapper<T> {
         if (CommonNames.Wrapper.FIELD_NAME_CONTENT.equals(key)) return;
         if (CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
         if (CommonNames.Wrapper.FIELD_NAME_TECH_INFO.equals(key)) return;
-//        if (CommonNames.Params.PARAM_REQUEST.equals(key)) return;
         this.techInfo.put(key, val);
     }
 

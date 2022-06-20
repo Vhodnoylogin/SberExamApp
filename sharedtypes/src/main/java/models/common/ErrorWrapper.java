@@ -1,10 +1,15 @@
 package models.common;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import models.help.CommonNames;
+
 import java.util.ArrayList;
 import java.util.Optional;
 
 public class ErrorWrapper<T> extends Wrapper<T> implements IWrapper<T> {
+    @JsonProperty(CommonNames.FIELD_NAME_ERROR)
     protected Throwable error;
+    @JsonProperty(CommonNames.FIELD_NAME_ERROR_CLASSNAME)
     protected String errorClassName;
 
     public static <R> ErrorWrapper<R> wrap(Throwable e) {

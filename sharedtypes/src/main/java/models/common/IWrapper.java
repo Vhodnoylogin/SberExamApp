@@ -22,7 +22,7 @@ public interface IWrapper<T> {
 
     void addTexInfo(String key, Object val);
 
-    Map<String, Object> getTexInfo();
+    Map<String, Object> getTechInfo();
 
 
 }

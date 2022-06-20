@@ -1,24 +1,29 @@
 package models.common;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import models.help.CommonNames;
+
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
 public class Wrapper<T> implements IWrapper<T> {
+    @JsonProperty(CommonNames.FIELD_NAME_UUID)
     protected UUID uuid;
-
+    @JsonProperty(CommonNames.FIELD_NAME_TIMESTAMP)
     protected LocalDateTime timestamp;
-
+    @JsonProperty(CommonNames.FIELD_NAME_CONTENT)
     protected List<T> content;
+    @JsonProperty(CommonNames.FIELD_NAME_CONTENT_SIZE)
     protected Long contentSize;
-
-    protected Map<String, Object> texInfo;
+    @JsonProperty(CommonNames.FIELD_NAME_TECH_INFO)
+    protected Map<String, Object> techInfo;
 
     protected Wrapper() {
         this.timestamp = LocalDateTime.now();
         this.uuid = UUID.randomUUID();
-        this.texInfo = new HashMap<>();
+        this.techInfo = new HashMap<>();
     }
 
     public void setTimestamp(LocalDateTime timestamp) {
@@ -73,12 +78,12 @@ public class Wrapper<T> implements IWrapper<T> {
         this.content = list;
     }
 
-    public Map<String, Object> getTexInfo() {
-        return texInfo;
+    public Map<String, Object> getTechInfo() {
+        return techInfo;
     }
 
     public void addTexInfo(String key, Object val) {
-        this.texInfo.put(key, val);
+        this.techInfo.put(key, val);
     }
 
     public Long getContentSize() {
@@ -92,7 +97,7 @@ public class Wrapper<T> implements IWrapper<T> {
                 ", timestamp=" + timestamp +
                 ", content=" + content +
                 ", contentSize=" + contentSize +
-                ", texInfo=" + texInfo +
+                ", texInfo=" + techInfo +
                 '}';
     }
 }

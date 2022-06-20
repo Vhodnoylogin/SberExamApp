@@ -9,15 +9,15 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class Wrapper<T> implements IWrapper<T> {
-    @JsonProperty(CommonNames.FIELD_NAME_UUID)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_UUID)
     protected UUID uuid;
-    @JsonProperty(CommonNames.FIELD_NAME_TIMESTAMP)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP)
     protected LocalDateTime timestamp;
-    @JsonProperty(CommonNames.FIELD_NAME_CONTENT)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_CONTENT)
     protected List<T> content;
-    @JsonProperty(CommonNames.FIELD_NAME_CONTENT_SIZE)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE)
     protected Long contentSize;
-    @JsonProperty(CommonNames.FIELD_NAME_TECH_INFO)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_TECH_INFO)
     protected Map<String, Object> techInfo;
 
     protected Wrapper() {

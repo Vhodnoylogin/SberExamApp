@@ -2,6 +2,7 @@ package restserviceg.controllers.decorator;
 
 import models.common.ErrorWrapper;
 import models.common.Wrapper;
+import models.help.CommonNames;
 import org.apache.logging.log4j.Logger;
 import restserviceg.logic.help.SupplierWithException;
 
@@ -19,15 +20,13 @@ import static models.help.MyTimestamp.TIMESTAMP_FORMAT;
 // хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
 // пусть пока будет так.
 public class NeDecorator {
-    protected static final String TM_UUID = "uuid";
-    protected static final String TM_TIMESTAMP = "timestamp";
-    protected static final String TM_REQUEST = "request";
+
 
     // создает объект на основе данных пришедшего запроса
     public static Wrapper<String> buildRequest(HttpServletRequest request, Logger logger) {
         Wrapper<String> req = Wrapper.wrap(request.getServletPath());
         Optional
-                .ofNullable(request.getParameter(TM_UUID))
+                .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_UUID))
                 .map(UUID::fromString)
                 .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
         request.getParameterMap().forEach(
@@ -36,7 +35,7 @@ public class NeDecorator {
         // ставим клиентскй таймстемп
         try {
             LocalDateTime timestamp = LocalDateTime.parse(
-                    request.getParameterMap().get(TM_REQUEST)[0]
+                    request.getParameterMap().get(CommonNames.Params.PARAM_REQUEST)[0]
                     , TIMESTAMP_FORMAT
             );
             req.setTimestamp(timestamp);
@@ -68,7 +67,7 @@ public class NeDecorator {
         if (map != null) {
             map.forEach(wrapper::addTechInfo);
         }
-        wrapper.addTechInfo(TM_REQUEST, req);
+        wrapper.addTechInfo(CommonNames.Params.PARAM_REQUEST, req);
         logger.info(wrapper);
         return wrapper;
     }

@@ -6,9 +6,9 @@ import models.help.CommonNames;
 import java.util.UUID;
 
 public class Greeting {
-    @JsonProperty(CommonNames.FIELD_NAME_UUID)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_UUID)
     protected final UUID id;
-    @JsonProperty(CommonNames.FIELD_NAME_CONTENT)
+    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_CONTENT)
     protected final String content;
 
     public Greeting(UUID id, String content) {

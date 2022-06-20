@@ -27,6 +27,12 @@ public class GreetingExtendedController {
         logger.debug(request.getServletPath());
 
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            return null;
+        }
+
         return NeDecorator.buildResponse(() -> null, logger, req, parameters);
     }
 }

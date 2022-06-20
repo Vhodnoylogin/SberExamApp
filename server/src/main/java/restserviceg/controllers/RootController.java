@@ -19,7 +19,7 @@ public class RootController {
 
     //    @ExceptionHandler(RuntimeException.class)
     @GetMapping("/")
-    public Greeting greeting(
+    public Object greeting(
             HttpServletRequest request
             , @RequestParam(value = "name", defaultValue = "World") String name
     ) {

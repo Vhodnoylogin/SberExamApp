@@ -4,6 +4,7 @@ package com.exam.restservice.client;
 
 //import models.Greeting;
 
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -37,7 +38,8 @@ public class Client {
         // Send request with GET method, and Headers.
         ResponseEntity<String> response = restTemplate.exchange(
                 URL_RUN, HttpMethod.GET
-                , entity, String.class
+                , entity, new ParameterizedTypeReference<>() {
+                }
         );
 
         HttpStatus statusCode = response.getStatusCode();
@@ -79,8 +81,11 @@ public class Client {
         eert.put("njk", "09865");
 
         // Send request with GET method, and Headers.
-        ResponseEntity<String> response = restTemplate.getForEntity(
-                urlTemplate, String.class, eert
+        ResponseEntity<String> response = restTemplate.exchange(
+                urlTemplate, HttpMethod.GET
+                , entity
+                , new ParameterizedTypeReference<>() {
+                }, eert
         );
 
         HttpStatus statusCode = response.getStatusCode();

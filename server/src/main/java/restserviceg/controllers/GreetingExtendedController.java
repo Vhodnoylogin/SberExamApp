@@ -34,6 +34,6 @@ public class GreetingExtendedController {
 //            return null;
 //        }
 
-        return NeDecorator.buildResponse(() -> null, logger, req, parameters);
+        return NeDecorator.buildResponseList(() -> null, logger, req, parameters);
     }
 }

@@ -30,10 +30,15 @@ public class Wrapper<T> implements IWrapper<T> {
         this.timestamp = timestamp;
     }
 
-    protected static <R, W extends Wrapper<R>> W wrap(Supplier<W> gen, Supplier<List<R>> data) {
+    protected static <R, W extends Wrapper<R>, L extends List<R>> W wrap(Supplier<W> gen, Supplier<L> data) {
         W wrapper = gen.get();
         wrapper.setContent(data.get());
-        wrapper.contentSize = (long) Optional.of(wrapper.content.size()).orElse(0);
+        try {
+            wrapper.contentSize = (long) wrapper.content.size();
+        } catch (Exception e) {
+            wrapper.contentSize = 0L;
+        }
+//        wrapper.contentSize = (long) Optional.of(wrapper.content.size()).orElse(0);
         return wrapper;
     }
 

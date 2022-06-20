@@ -30,4 +30,17 @@ public class ErrorWrapper<T> extends Wrapper<T> implements IWrapper<T> {
     public String getErrorClassName() {
         return errorClassName;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorWrapper{" +
+                "uuid=" + uuid +
+                ", timestamp=" + timestamp +
+                ", content=" + content +
+                ", contentSize=" + contentSize +
+                ", error=" + error +
+                ", errorClassName='" + errorClassName + '\'' +
+                ", techInfo=" + techInfo +
+                '}';
+    }
 }

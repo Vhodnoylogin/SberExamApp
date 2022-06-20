@@ -30,6 +30,17 @@ public class Wrapper<T> implements IWrapper<T> {
         this.timestamp = timestamp;
     }
 
+    public void setTimestamp(String sTimestamp) {
+        try {
+            this.timestamp = LocalDateTime.parse(
+                    sTimestamp
+                    , help.MyTimestamp.TIMESTAMP_FORMAT
+            );
+        } catch (Exception ignored) {
+
+        }
+    }
+
     protected static <R, W extends Wrapper<R>, L extends List<R>> W wrap(Supplier<W> gen, Supplier<L> data) {
         W wrapper = gen.get();
         wrapper.setContent(data.get());
@@ -93,6 +104,7 @@ public class Wrapper<T> implements IWrapper<T> {
         if (CommonNames.Wrapper.FIELD_NAME_CONTENT.equals(key)) return;
         if (CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
         if (CommonNames.Wrapper.FIELD_NAME_TECH_INFO.equals(key)) return;
+//        if (CommonNames.Params.PARAM_REQUEST.equals(key)) return;
         this.techInfo.put(key, val);
     }
 

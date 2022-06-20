@@ -8,13 +8,10 @@ import restserviceg.logic.help.SupplierWithException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
-
-import static help.MyTimestamp.TIMESTAMP_FORMAT;
 
 
 // хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
@@ -33,17 +30,19 @@ public class NeDecorator {
 //        request.getParameterMap().forEach(
 //                (k, v) -> req.addTechInfo(k, v[0])
 //        );
-
-        // ставим клиентскй таймстемп
-        try {
-            LocalDateTime timestamp = LocalDateTime.parse(
-                    request.getParameterMap().get(CommonNames.Params.PARAM_REQUEST)[0]
-                    , TIMESTAMP_FORMAT
-            );
-            req.setTimestamp(timestamp);
-        } catch (DateTimeParseException | NullPointerException ignored) {
-
-        }
+        // ставим клиентскй таймстемп, если он есть в значение таймстемпа
+        req.setTimestamp(request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]);
+        // ставим в techInfo значение серверного таймстемпа, когда пришел запрос на сервер
+        req.addTechInfo(CommonNames.Params.PARAM_SERVER_TIMESTAMP, LocalDateTime.now());
+//        try {
+//            LocalDateTime timestamp = LocalDateTime.parse(
+//                    request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]
+//                    , TIMESTAMP_FORMAT
+//            );
+//            req.setTimestamp(timestamp);
+//        } catch (DateTimeParseException | NullPointerException ignored) {
+//
+//        }
         logger.info(req);
 
         return req;

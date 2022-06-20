@@ -23,6 +23,8 @@ public class CommonNames {
         public static final String PARAM_TIMESTAMP = Wrapper.FIELD_NAME_TIMESTAMP;
 
         public static final String PARAM_REQUEST = "request";
+
+        public static final String PARAM_SERVER_TIMESTAMP = "serverTimestamp";
     }
 
 

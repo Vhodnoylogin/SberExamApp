@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import restserviceg.logic.help.SupplierWithException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +30,11 @@ public class NeDecorator {
 //                .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
         uuid.ifPresent(req::setUuid);
 
+        Optional<LocalDateTime> timestamp = Optional
+                .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP))
+                .map(MyTimestamp::parse);
+        timestamp.ifPresent(req::setTimestamp);
+
 //        // надо ли в обертку запроса добавлять все параметры, с которыми оно было запущено?
 //        request.getParameterMap().forEach(
 //                (k, v) -> req.addTechInfo(k, v[0])
@@ -45,10 +51,7 @@ public class NeDecorator {
         // ставим в techInfo значение клиентского таймстемпа
         req.addTechInfo(CommonNames.Params.PARAM_CLIENT_UUID, uuid.orElse(null));
         // ставим в techInfo значение клиентского таймстемпа
-        req.addTechInfo(
-                CommonNames.Params.PARAM_CLIENT_TIMESTAMP
-                , MyTimestamp.parse(request.getParameter(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP))
-        );
+        req.addTechInfo(CommonNames.Params.PARAM_CLIENT_TIMESTAMP, timestamp.orElse(null));
 //        try {
 //            LocalDateTime timestamp = LocalDateTime.parse(
 //                    request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]

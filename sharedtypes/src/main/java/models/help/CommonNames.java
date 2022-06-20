@@ -19,6 +19,9 @@ public class CommonNames {
     public static class Params {
         public static final String PARAM_ID = "id";
 
+        public static final String PARAM_UUID = Wrapper.FIELD_NAME_UUID;
+        public static final String PARAM_TIMESTAMP = Wrapper.FIELD_NAME_TIMESTAMP;
+
         public static final String PARAM_REQUEST = "request";
     }
 

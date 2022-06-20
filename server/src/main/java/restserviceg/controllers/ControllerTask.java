@@ -11,8 +11,6 @@ import restserviceg.controllers.decorator.NeDecorator;
 import restserviceg.logic.LookupOnAirportsFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 public class ControllerTask {
@@ -37,11 +35,12 @@ public class ControllerTask {
     public Wrapper<Data> getOneRow(
             HttpServletRequest request
             , @RequestParam("id") Long id
-            , @RequestParam(required = false) UUID uuid
-            , @RequestParam(required = false) Map<String, String> parameters
+//            , @RequestParam(required = false) UUID uuid
+//            , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("Debugging log: getOneRow(" + id + ")");
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
+
         return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req);
     }
 }

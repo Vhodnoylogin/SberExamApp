@@ -1,6 +1,7 @@
 package restserviceg.controllers;
 
 import models.Greeting;
+import models.help.URLsStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,7 @@ public class RootController {
     protected final AtomicLong counter = new AtomicLong();
 
     //    @ExceptionHandler(RuntimeException.class)
-    @GetMapping("/")
+    @GetMapping(URLsStorage.URL_ROOT)
     public Object greeting(
             HttpServletRequest request
             , @RequestParam(value = "name", defaultValue = "World") String name

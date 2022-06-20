@@ -13,9 +13,11 @@ import java.util.Map;
 
 @RestController
 public class MultiPathController {
+
+    protected static final String URL_MULTI = "/*";
     protected static final Logger logger = LogManager.getLogger(MultiPathController.class);
 
-    @GetMapping("/*")
+    @GetMapping(URL_MULTI)
     public Object run(
             HttpServletRequest request
             , @RequestParam(required = false) Map<String, String> parameters

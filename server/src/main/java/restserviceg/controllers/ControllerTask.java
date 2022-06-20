@@ -2,6 +2,7 @@ package restserviceg.controllers;
 
 import models.Data;
 import models.common.Wrapper;
+import models.help.URLsStorage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 public class ControllerTask {
-    protected final String PATH_BASE = "/airports";
-    protected final String PATH_ACTION_GET_ALL = PATH_BASE + "/get/all";
-    protected final String PATH_ACTION_GET_BY_ID = PATH_BASE + "/get";
+    protected final String PATH_ACTION_GET_ALL = URLsStorage.URL_AIRPORTS_GET_ALL;
+    protected final String PATH_ACTION_GET_BY_ID = URLsStorage.URL_AIRPORTS_GET_BY_ID;
 
     protected static final Logger logger = LogManager.getLogger(ControllerTask.class);
 
@@ -40,7 +40,6 @@ public class ControllerTask {
     ) {
         logger.debug("Debugging log: getOneRow(" + id + ")");
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-
         return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req);
     }
 }

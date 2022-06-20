@@ -31,7 +31,7 @@ public class NeDecorator {
                 .map(UUID::fromString)
                 .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
         request.getParameterMap().forEach(
-                (k, v) -> req.addTexInfo(k, v[0])
+                (k, v) -> req.addTechInfo(k, v[0])
         );
         // ставим клиентскй таймстемп
         try {
@@ -66,9 +66,9 @@ public class NeDecorator {
 
     protected static <T> Wrapper<T> addInfo(Wrapper<T> wrapper, Logger logger, Wrapper<?> req, Map<String, ?> map) {
         if (map != null) {
-            map.forEach(wrapper::addTexInfo);
+            map.forEach(wrapper::addTechInfo);
         }
-        wrapper.addTexInfo(TM_REQUEST, req);
+        wrapper.addTechInfo(TM_REQUEST, req);
         logger.info(wrapper);
         return wrapper;
     }

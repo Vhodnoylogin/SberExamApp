@@ -82,7 +82,7 @@ public class Wrapper<T> implements IWrapper<T> {
         return techInfo;
     }
 
-    public void addTexInfo(String key, Object val) {
+    public void addTechInfo(String key, Object val) {
         this.techInfo.put(key, val);
     }
 

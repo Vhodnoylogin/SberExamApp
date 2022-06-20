@@ -2,7 +2,7 @@ package models.common;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import models.help.CommonNames;
+import help.CommonNames;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -88,6 +88,11 @@ public class Wrapper<T> implements IWrapper<T> {
     }
 
     public void addTechInfo(String key, Object val) {
+        if (CommonNames.Wrapper.FIELD_NAME_UUID.equals(key)) return;
+        if (CommonNames.Wrapper.FIELD_NAME_TIMESTAMP.equals(key)) return;
+        if (CommonNames.Wrapper.FIELD_NAME_CONTENT.equals(key)) return;
+        if (CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
+        if (CommonNames.Wrapper.FIELD_NAME_TECH_INFO.equals(key)) return;
         this.techInfo.put(key, val);
     }
 

@@ -1,7 +1,7 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import models.help.CommonNames;
+import help.CommonNames;
 
 import java.util.UUID;
 

@@ -1,4 +1,4 @@
-package models.help;
+package help;
 
 import java.time.format.DateTimeFormatter;
 

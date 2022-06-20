@@ -1,8 +1,8 @@
 package restserviceg.controllers.decorator;
 
+import help.CommonNames;
 import models.common.ErrorWrapper;
 import models.common.Wrapper;
-import models.help.CommonNames;
 import org.apache.logging.log4j.Logger;
 import restserviceg.logic.help.SupplierWithException;
 
@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-import static models.help.MyTimestamp.TIMESTAMP_FORMAT;
+import static help.MyTimestamp.TIMESTAMP_FORMAT;
 
 
 // хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
@@ -29,9 +29,11 @@ public class NeDecorator {
                 .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_UUID))
                 .map(UUID::fromString)
                 .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
-        request.getParameterMap().forEach(
-                (k, v) -> req.addTechInfo(k, v[0])
-        );
+//        // надо ли в обертку запроса добавлять все параметры, с которыми оно было запущено?
+//        request.getParameterMap().forEach(
+//                (k, v) -> req.addTechInfo(k, v[0])
+//        );
+
         // ставим клиентскй таймстемп
         try {
             LocalDateTime timestamp = LocalDateTime.parse(
@@ -65,7 +67,15 @@ public class NeDecorator {
 
     protected static <T> Wrapper<T> addInfo(Wrapper<T> wrapper, Logger logger, Wrapper<?> req, Map<String, ?> map) {
         if (map != null) {
-            map.forEach(wrapper::addTechInfo);
+            map
+//                    .entrySet().stream()
+//                    .filter(x->!CommonNames.Wrapper.FIELD_NAME_TIMESTAMP.equals(x.getKey()))
+//                    .filter(x->!CommonNames.Wrapper.FIELD_NAME_CONTENT.equals(x.getKey()))
+//                    .filter(x->!CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE.equals(x.getKey()))
+//                    .filter(x->!CommonNames.Wrapper.FIELD_NAME_TECH_INFO.equals(x.getKey()))
+//                    .filter(x->!CommonNames.Wrapper.FIELD_NAME_UUID.equals(x.getKey()))
+//                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
+                    .forEach(wrapper::addTechInfo);
         }
         wrapper.addTechInfo(CommonNames.Params.PARAM_REQUEST, req);
         logger.info(wrapper);

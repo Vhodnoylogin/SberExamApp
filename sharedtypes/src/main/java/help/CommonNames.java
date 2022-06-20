@@ -1,4 +1,4 @@
-package models.help;
+package help;
 
 public class CommonNames {
     public static class Wrapper {

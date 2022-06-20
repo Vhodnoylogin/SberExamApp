@@ -2,7 +2,7 @@ package models.common;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import models.help.CommonNames;
+import help.CommonNames;
 
 import java.time.LocalDateTime;
 import java.util.List;

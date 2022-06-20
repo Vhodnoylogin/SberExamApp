@@ -1,6 +1,6 @@
 package com.exam.restservice.client;
 
-import models.help.CommonNames;
+import help.CommonNames;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +12,7 @@ import java.util.function.Function;
 
 public class RequestAirport<T> {
     protected static final String URL_HOST = "http://localhost:8080";
+    protected static final String URL_WORK = CommonNames.URLStorage.URL_GREETING;
 
     protected ParameterizedTypeReference<T> type;
     Function<Map<String, Object>, ResponseEntity<T>> func;
@@ -21,7 +22,7 @@ public class RequestAirport<T> {
     }
 
     protected static String preparedURLForAirports() {
-        return BasicUrlPrepared.commonUrlPrepared(URL_HOST + CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID)
+        return BasicUrlPrepared.commonUrlPrepared(URL_HOST + URL_WORK)
                 .queryParam(CommonNames.Params.PARAM_ID, "{" + CommonNames.Params.PARAM_ID + "}")
 //                .queryParam("qazwsx", "{xswzaq}")
                 .encode()

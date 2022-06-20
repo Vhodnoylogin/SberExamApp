@@ -1,6 +1,6 @@
 package com.exam.restservice.client;
 
-import models.help.CommonNames;
+import help.CommonNames;
 import org.springframework.web.util.UriComponentsBuilder;
 
 public class BasicUrlPrepared {

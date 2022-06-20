@@ -9,10 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class Client {
-
-
     public static void testClient() {
         // Send request with GET method
+//        RequestAirport<Wrapper<String>> req = new RequestAirport<>(new ParameterizedTypeReference<>() {
+//        });
+//        ResponseEntity<Wrapper<String>> response = req.get(12L);
         RequestAirport<String> req = new RequestAirport<>(new ParameterizedTypeReference<>() {
         });
         ResponseEntity<String> response = req.get(12L);
@@ -23,6 +24,7 @@ public class Client {
         // Status Code: 200
         if (statusCode == HttpStatus.OK) {
             // Response Body Data
+//            Wrapper<String> res = response.getBody();
             String res = response.getBody();
             System.out.println(res);
         }

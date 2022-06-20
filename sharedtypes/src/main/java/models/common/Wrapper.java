@@ -7,6 +7,7 @@ import java.util.function.Supplier;
 
 public class Wrapper<T> implements IWrapper<T> {
     protected UUID uuid;
+
     protected LocalDateTime timestamp;
 
     protected List<T> content;
@@ -18,6 +19,10 @@ public class Wrapper<T> implements IWrapper<T> {
         this.timestamp = LocalDateTime.now();
         this.uuid = UUID.randomUUID();
         this.texInfo = new HashMap<>();
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     protected static <R, W extends Wrapper<R>> W wrap(Supplier<W> gen, Supplier<List<R>> data) {

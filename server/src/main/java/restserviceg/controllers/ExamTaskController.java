@@ -14,11 +14,11 @@ import restserviceg.logic.LookupOnAirportsFile;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-public class ControllerTask {
+public class ExamTaskController {
     protected final String PATH_ACTION_GET_ALL = CommonNames.URLStorage.URL_AIRPORTS_GET_ALL;
     protected final String PATH_ACTION_GET_BY_ID = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
 
-    protected static final Logger logger = LogManager.getLogger(ControllerTask.class);
+    protected static final Logger logger = LogManager.getLogger(ExamTaskController.class);
 
     @GetMapping(PATH_ACTION_GET_ALL)
     public Wrapper<Data> getAllRows(

@@ -30,20 +30,10 @@ public class Wrapper<T> implements IWrapper<T> {
         this.timestamp = timestamp;
     }
 
-    public void setTimestamp(String sTimestamp) {
-        try {
-            this.timestamp = LocalDateTime.parse(
-                    sTimestamp
-                    , help.MyTimestamp.TIMESTAMP_FORMAT
-            );
-        } catch (Exception ignored) {
-
-        }
-    }
-
     protected static <R, W extends Wrapper<R>, L extends List<R>> W wrap(Supplier<W> gen, Supplier<L> data) {
         W wrapper = gen.get();
         wrapper.setContent(data.get());
+
         try {
             wrapper.contentSize = (long) wrapper.content.size();
         } catch (Exception e) {
@@ -51,6 +41,17 @@ public class Wrapper<T> implements IWrapper<T> {
         }
 //        wrapper.contentSize = (long) Optional.of(wrapper.content.size()).orElse(0);
         return wrapper;
+    }
+
+    public void setTimestamp(String sTimestamp) {
+        try {
+            this.timestamp = LocalDateTime.parse(
+                    sTimestamp
+                    , help.MyTimestamp.TIMESTAMP_FORMAT
+            );
+        } catch (Exception e) {
+            this.timestamp = null;
+        }
     }
 
     public static <R, L extends List<R>> Wrapper<R> wrap(L data) {

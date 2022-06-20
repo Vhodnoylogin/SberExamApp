@@ -31,7 +31,11 @@ public class NeDecorator {
 //                (k, v) -> req.addTechInfo(k, v[0])
 //        );
         // ставим клиентскй таймстемп, если он есть в значение таймстемпа
-        req.setTimestamp(request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]);
+        req.setTimestamp(
+                request.getParameterMap().getOrDefault(
+                        CommonNames.Params.PARAM_TIMESTAMP
+                        , new String[]{null}
+                )[0]);
         // ставим в techInfo значение серверного таймстемпа, когда пришел запрос на сервер
         req.addTechInfo(CommonNames.Params.PARAM_SERVER_TIMESTAMP, LocalDateTime.now());
 //        try {

@@ -2,7 +2,7 @@ package models;
 
 import com.opencsv.bean.CsvBindByPosition;
 
-public class Data {
+public class Airport {
     @CsvBindByPosition(position = 0)
     protected Long id;
     @CsvBindByPosition(position = 1)

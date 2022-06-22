@@ -1,7 +1,7 @@
 package restserviceg.logic;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import models.Data;
+import models.Airport;
 import org.springframework.core.io.ClassPathResource;
 import restserviceg.logic.exceptions.RecordNotFoundException;
 
@@ -17,22 +17,22 @@ import java.util.stream.Collectors;
 public class LookupOnAirportsFile {
     protected static final String FILE_AIRPORT_PATH = "/data/airports.dat";
 
-    protected static Map<Long, Data> cashedFile;
+    protected static Map<Long, Airport> cashedFile;
 
-    protected static Map<Long, Data> getFromFile() throws IOException {
+    protected static Map<Long, Airport> getFromFile() throws IOException {
         if (cashedFile == null) {
             File f = new ClassPathResource(
                     FILE_AIRPORT_PATH
                     , LookupOnAirportsFile.class.getClassLoader()
             ).getFile();
-            cashedFile = new CsvToBeanBuilder<Data>(new FileReader(f))
-                    .withType(Data.class)
+            cashedFile = new CsvToBeanBuilder<Airport>(new FileReader(f))
+                    .withType(Airport.class)
                     .withIgnoreEmptyLine(true)
                     .build()
                     .stream()
                     .filter(x -> x.getId() != null)
                     .collect(Collectors.toMap(
-                            Data::getId
+                            Airport::getId
                             , x -> x)
                     );
         }
@@ -40,14 +40,14 @@ public class LookupOnAirportsFile {
         return cashedFile;
     }
 
-    public static Data getDataById(Long id) throws IOException {
+    public static Airport getDataById(Long id) throws IOException {
         return Optional
                 .ofNullable(getFromFile().get(id))
                 .orElseThrow(() -> new RecordNotFoundException(id));
 
     }
 
-    public static List<Data> getAllData() throws IOException {
+    public static List<Airport> getAllData() throws IOException {
         return new ArrayList<>(getFromFile().values());
     }
 }

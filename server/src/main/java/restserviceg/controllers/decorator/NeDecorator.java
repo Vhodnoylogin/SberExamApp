@@ -5,7 +5,6 @@ import help.MyTimestamp;
 import models.common.ErrorWrapper;
 import models.common.Wrapper;
 import org.apache.logging.log4j.Logger;
-import restserviceg.logic.help.SupplierWithException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -13,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 
 // хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
@@ -66,17 +66,17 @@ public class NeDecorator {
         return req;
     }
 
-    protected static <T> Wrapper<T> createWrap(SupplierWithException<T> act) {
+    protected static <T> Wrapper<T> createWrap(Callable<T> act) {
         try {
-            return Wrapper.wrap(act.action());
+            return Wrapper.wrap(act.call());
         } catch (Exception e) {
             return ErrorWrapper.wrap(e);
         }
     }
 
-    protected static <T, L extends List<T>> Wrapper<T> createWrapL(SupplierWithException<L> act) {
+    protected static <T, L extends List<T>> Wrapper<T> createWrapL(Callable<L> act) {
         try {
-            return Wrapper.wrap(act.action());
+            return Wrapper.wrap(act.call());
         } catch (Exception e) {
             return ErrorWrapper.wrap(e);
         }
@@ -100,24 +100,24 @@ public class NeDecorator {
     }
 
     // получаем данные и оборачиваем ответ в обертку для красоты исполнения
-    public static <T> Wrapper<T> buildResponse(SupplierWithException<T> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
+    public static <T> Wrapper<T> buildResponse(Callable<T> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
         Wrapper<T> resp = createWrap(act);
         return addInfo(resp, logger, req, map);
     }
 
     // то же самое, но если данные - список
-    public static <T, R extends List<T>> Wrapper<T> buildResponseList(SupplierWithException<R> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
+    public static <T, R extends List<T>> Wrapper<T> buildResponseList(Callable<R> act, Logger logger, Wrapper<?> req, Map<String, ?> map) {
         Wrapper<T> resp = createWrapL(act);
         return addInfo(resp, logger, req, map);
     }
 
-    public static <T> Wrapper<T> buildResponse(SupplierWithException<T> act, Logger logger, Wrapper<?> req) {
+    public static <T> Wrapper<T> buildResponse(Callable<T> act, Logger logger, Wrapper<?> req) {
         Wrapper<T> resp = createWrap(act);
         return addInfo(resp, logger, req, null);
     }
 
     // то же самое, но если данные - список
-    public static <T, R extends List<T>> Wrapper<T> buildResponseList(SupplierWithException<R> act, Logger logger, Wrapper<?> req) {
+    public static <T, R extends List<T>> Wrapper<T> buildResponseList(Callable<R> act, Logger logger, Wrapper<?> req) {
         Wrapper<T> resp = createWrapL(act);
         return addInfo(resp, logger, req, null);
     }

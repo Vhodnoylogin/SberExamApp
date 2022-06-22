@@ -115,7 +115,7 @@ public class Wrapper<T> implements IWrapper<T> {
                 ", timestamp=" + timestamp +
                 ", content=" + content +
                 ", contentSize=" + contentSize +
-                ", texInfo=" + techInfo +
+                ", techInfo=" + techInfo +
                 '}';
     }
 }

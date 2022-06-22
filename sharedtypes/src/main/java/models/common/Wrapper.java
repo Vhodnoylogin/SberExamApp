@@ -10,15 +10,15 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class Wrapper<T> implements IWrapper<T> {
-    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_UUID)
+    @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_UUID)
     protected UUID uuid;
-    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP)
+    @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP)
     protected LocalDateTime timestamp;
-    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_CONTENT)
+    @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_CONTENT)
     protected List<T> content;
-    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE)
+    @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE)
     protected Long contentSize;
-    @JsonProperty(CommonNames.Wrapper.FIELD_NAME_TECH_INFO)
+    @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_TECH_INFO)
     protected Map<String, Object> techInfo;
 
     protected Wrapper() {
@@ -96,11 +96,11 @@ public class Wrapper<T> implements IWrapper<T> {
     }
 
     public void addTechInfo(String key, Object val) {
-        if (CommonNames.Wrapper.FIELD_NAME_UUID.equals(key)) return;
-        if (CommonNames.Wrapper.FIELD_NAME_TIMESTAMP.equals(key)) return;
-        if (CommonNames.Wrapper.FIELD_NAME_CONTENT.equals(key)) return;
-        if (CommonNames.Wrapper.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
-        if (CommonNames.Wrapper.FIELD_NAME_TECH_INFO.equals(key)) return;
+        if (CommonNames.WrapperNames.FIELD_NAME_UUID.equals(key)) return;
+        if (CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP.equals(key)) return;
+        if (CommonNames.WrapperNames.FIELD_NAME_CONTENT.equals(key)) return;
+        if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
+        if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return;
         this.techInfo.put(key, val);
     }
 

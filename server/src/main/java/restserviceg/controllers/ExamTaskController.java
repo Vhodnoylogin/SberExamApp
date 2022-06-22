@@ -1,7 +1,7 @@
 package restserviceg.controllers;
 
 import help.CommonNames;
-import models.Data;
+import models.Airport;
 import models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +21,7 @@ public class ExamTaskController {
     protected static final Logger logger = LogManager.getLogger(ExamTaskController.class);
 
     @GetMapping(PATH_ACTION_GET_ALL)
-    public Wrapper<Data> getAllRows(
+    public Wrapper<Airport> getAllRows(
             HttpServletRequest request
 //            , @RequestParam(required = false) UUID uuid
 //            , @RequestParam(required = false) Map<String, String> parameters
@@ -32,7 +32,7 @@ public class ExamTaskController {
     }
 
     @GetMapping(PATH_ACTION_GET_BY_ID)
-    public Wrapper<Data> getOneRow(
+    public Wrapper<Airport> getOneRow(
             HttpServletRequest request
             , @RequestParam("id") Long id
 //            , @RequestParam(required = false) UUID uuid

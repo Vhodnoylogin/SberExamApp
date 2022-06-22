@@ -25,13 +25,13 @@ public class NeDecorator {
         Wrapper<String> req = Wrapper.wrap(request.getServletPath());
 
         Optional<UUID> uuid = Optional
-                .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_UUID))
+                .ofNullable(request.getParameter(CommonNames.WrapperNames.FIELD_NAME_UUID))
                 .map(UUID::fromString);
 //                .ifPresentOrElse(req::setUuid, () -> req.setUuid(null));
         uuid.ifPresent(req::setUuid);
 
         Optional<LocalDateTime> timestamp = Optional
-                .ofNullable(request.getParameter(CommonNames.Wrapper.FIELD_NAME_TIMESTAMP))
+                .ofNullable(request.getParameter(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP))
                 .map(MyTimestamp::parse);
         timestamp.ifPresent(req::setTimestamp);
 
@@ -49,9 +49,9 @@ public class NeDecorator {
 //                )[0]);
 
         // ставим в techInfo значение клиентского таймстемпа
-        req.addTechInfo(CommonNames.Params.PARAM_CLIENT_UUID, uuid.orElse(null));
+        req.addTechInfo(CommonNames.ParamsNames.PARAM_CLIENT_UUID, uuid.orElse(null));
         // ставим в techInfo значение клиентского таймстемпа
-        req.addTechInfo(CommonNames.Params.PARAM_CLIENT_TIMESTAMP, timestamp.orElse(null));
+        req.addTechInfo(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP, timestamp.orElse(null));
 //        try {
 //            LocalDateTime timestamp = LocalDateTime.parse(
 //                    request.getParameterMap().get(CommonNames.Params.PARAM_TIMESTAMP)[0]
@@ -94,7 +94,7 @@ public class NeDecorator {
 //                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))
                     .forEach(wrapper::addTechInfo);
         }
-        wrapper.addTechInfo(CommonNames.Params.PARAM_REQUEST, req);
+        wrapper.addTechInfo(CommonNames.ParamsNames.PARAM_REQUEST, req);
         logger.info(wrapper);
         return wrapper;
     }

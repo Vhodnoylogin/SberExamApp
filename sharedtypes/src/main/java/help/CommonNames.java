@@ -1,7 +1,7 @@
 package help;
 
 public class CommonNames {
-    public static class Wrapper {
+    public static class WrapperNames {
 
         public static final String FIELD_NAME_UUID = "uuid";
         public static final String FIELD_NAME_TIMESTAMP = "timestamp";
@@ -10,22 +10,24 @@ public class CommonNames {
         public static final String FIELD_NAME_CONTENT = "content";
     }
 
-    public static class Error {
+    public static class ErrorNames {
 
         public static final String FIELD_NAME_ERROR = "error";
         public static final String FIELD_NAME_ERROR_CLASSNAME = "errorClassName";
     }
 
-    public static class Params {
+    public static class ParamsNames {
         public static final String PARAM_ID = "id";
 
-        public static final String PARAM_UUID = Wrapper.FIELD_NAME_UUID;
-        public static final String PARAM_TIMESTAMP = Wrapper.FIELD_NAME_TIMESTAMP;
+        public static final String PARAM_UUID = WrapperNames.FIELD_NAME_UUID;
+        public static final String PARAM_TIMESTAMP = WrapperNames.FIELD_NAME_TIMESTAMP;
 
         public static final String PARAM_REQUEST = "request";
 
         public static final String PARAM_CLIENT_TIMESTAMP = "clientTimestamp";
         public static final String PARAM_CLIENT_UUID = "clientUUID";
+
+        public static final String PARAM_THREAD_NAME = "threadName";
     }
 
 

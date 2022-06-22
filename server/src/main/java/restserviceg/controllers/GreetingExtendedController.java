@@ -15,16 +15,16 @@ import java.util.Map;
 
 @RestController
 public class GreetingExtendedController {
-
     protected static final Logger logger = LogManager.getLogger(GreetingExtendedController.class);
 
+    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT + CommonNames.URLStorage.URL_GREETING;
+
     //    @ExceptionHandler(RuntimeException.class)
-    @GetMapping(CommonNames.URLStorage.URL_GREETING)
+    @GetMapping(URL_WORK)
     public Wrapper<Void> greeting(
             HttpServletRequest request
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
-        logger.debug("greeting");
         logger.debug(request.getServletPath());
 
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);

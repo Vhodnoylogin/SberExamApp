@@ -14,12 +14,12 @@ import java.util.UUID;
 @RestController
 public class RootController {
 
+    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT;
     protected static final Logger logger = LogManager.getLogger(RootController.class);
     protected static final String template = "Hello, %s!";
 //    protected final AtomicLong counter = new AtomicLong();
 
-    //    @ExceptionHandler(RuntimeException.class)
-    @GetMapping(CommonNames.URLStorage.URL_ROOT)
+    @GetMapping(URL_WORK)
     public Object greeting(
             HttpServletRequest request
             , @RequestParam(value = "name", defaultValue = "World") String name

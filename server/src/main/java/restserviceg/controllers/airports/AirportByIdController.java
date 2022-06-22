@@ -1,4 +1,4 @@
-package restserviceg.controllers;
+package restserviceg.controllers.airports;
 
 import help.CommonNames;
 import models.Airport;
@@ -14,22 +14,11 @@ import restserviceg.logic.LookupOnAirportsFile;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-public class ExamTaskController {
-    protected final String PATH_ACTION_GET_ALL = CommonNames.URLStorage.URL_AIRPORTS_GET_ALL;
+public class AirportByIdController {
     protected final String PATH_ACTION_GET_BY_ID = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
 
-    protected static final Logger logger = LogManager.getLogger(ExamTaskController.class);
+    protected static final Logger logger = LogManager.getLogger(AirportByIdController.class);
 
-    @GetMapping(PATH_ACTION_GET_ALL)
-    public Wrapper<Airport> getAllRows(
-            HttpServletRequest request
-//            , @RequestParam(required = false) UUID uuid
-//            , @RequestParam(required = false) Map<String, String> parameters
-    ) {
-        logger.debug("Debugging log: getAllRows()");
-        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-        return NeDecorator.buildResponseList(LookupOnAirportsFile::getAllData, logger, req);
-    }
 
     @GetMapping(PATH_ACTION_GET_BY_ID)
     public Wrapper<Airport> getOneRow(
@@ -38,7 +27,7 @@ public class ExamTaskController {
 //            , @RequestParam(required = false) UUID uuid
 //            , @RequestParam(required = false) Map<String, String> parameters
     ) {
-        logger.debug("Debugging log: getOneRow(" + id + ")");
+        logger.debug(request.getServletPath());
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
         return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req);
     }

@@ -1,5 +1,6 @@
 package restserviceg.controllers;
 
+import help.CommonNames;
 import models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,19 +15,17 @@ import java.util.Map;
 @RestController
 public class MultiPathController {
 
-    protected static final String URL_MULTI = "/*";
+    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT + "/*";
     protected static final Logger logger = LogManager.getLogger(MultiPathController.class);
 
-    @GetMapping(URL_MULTI)
+    @GetMapping(URL_WORK)
     public Object run(
             HttpServletRequest request
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
-        logger.debug("MultiPathController");
         logger.debug(request.getServletPath());
 
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
         return NeDecorator.buildResponse(request::getRequestURL, logger, req, parameters);
-//        return request.getRequestURL().toString() + "?" + request.getQueryString();
     }
 }

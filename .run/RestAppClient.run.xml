@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="RestAppClient" type="Application" factoryName="Application"
+                   nameIsGenerated="true">
+        <option name="MAIN_CLASS_NAME" value="com.exam.restservice.client.RestAppClient"/>
+        <module name="rest-service-g.client.main"/>
+        <extension name="coverage">
+            <pattern>
+                <option name="PATTERN" value="com.exam.restservice.client.requests.*"/>
+                <option name="ENABLED" value="true"/>
+            </pattern>
+        </extension>
+        <method v="2">
+            <option name="Make" enabled="true"/>
+        </method>
+    </configuration>
+</component>

@@ -7,14 +7,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class RestServiceGApplication {
+public class RestAppServer {
 
-	protected static final Logger logger = LogManager.getLogger(RestServiceGApplication.class);
+	protected static final Logger logger = LogManager.getLogger(RestAppServer.class);
 
 	public static void main(String[] args) {
 		logger.debug("Debugging log");
 		logger.info("Info log");
-		SpringApplication.run(RestServiceGApplication.class, args);
+		SpringApplication.run(RestAppServer.class, args);
 	}
 
 }

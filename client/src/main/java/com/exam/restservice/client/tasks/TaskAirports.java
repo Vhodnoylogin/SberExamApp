@@ -9,6 +9,7 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import help.CommonNames;
 import help.MyTimestamp;
+import models.Airport;
 import models.Greeting;
 import models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +25,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
-public class TaskGreeting {
+public class TaskAirports {
 
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
         Logger logger = LogManager.getLogger(TaskGreeting.class);
@@ -36,21 +37,20 @@ public class TaskGreeting {
         ResponseEntity<String> response = req.get(params);
         if (response.getStatusCode() == HttpStatus.OK) {
             String res = response.getBody();
-            logger.info(res);
-//            System.out.println(res);
+            System.out.println(res);
 
             Gson gson = new GsonBuilder().registerTypeAdapter(
                     LocalDateTime.class
                     , (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) -> MyTimestamp.parse(json.getAsString())
             ).create();
-            Wrapper<Void> greeting = gson.fromJson(res, new TypeToken<Wrapper<Void>>() {
+            Wrapper<Airport> greeting = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
             }.getType());
             logger.info(greeting);
             if (greeting != null) {
-                Wrapper<String> reqMsg = gson.fromJson(
+                Wrapper<Airport> reqMsg = gson.fromJson(
                         gson.toJson(
                                 greeting.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
-                        ), new TypeToken<Wrapper<String>>() {
+                        ), new TypeToken<Wrapper<Airport>>() {
                         }.getType()
                 );
 
@@ -75,7 +75,7 @@ public class TaskGreeting {
         return false;
     }
 
-    public static void testClient() {
+    public static void runAirports() {
         RequestSenderBuilder reqBuilder = new RequestSenderBuilder();
         RequestSender<String> req = reqBuilder.build(new ParameterizedTypeReference<>() {
         }, BasicUrlPrepared.preparedURL(CommonNames.URLStorage.URL_GREETING, CommonNames.ParamsNames.PARAM_ID, CommonNames.ParamsNames.PARAM_THREAD_NAME));

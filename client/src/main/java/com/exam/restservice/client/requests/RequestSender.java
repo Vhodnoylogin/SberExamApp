@@ -18,11 +18,13 @@ public class RequestSender<T> {
     }
 
     public ResponseEntity<T> get(Map<String, Object> params) {
-        params.putAll(Map.of(
+        Map<String, Object> paramss = new HashMap<>();
+        paramss.putAll(params);
+        paramss.putAll(Map.of(
                 CommonNames.ParamsNames.PARAM_UUID, UUID.randomUUID()
                 , CommonNames.ParamsNames.PARAM_TIMESTAMP, LocalDateTime.now()
         ));
-        return this.func.apply(params);
+        return this.func.apply(paramss);
     }
 
     public ResponseEntity<T> get(String key, Object value) {

@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 
 public class TaskAirports {
 
+    protected final static String URL_WORK = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
+
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
         Logger logger = LogManager.getLogger(TaskGreeting.class);
 
@@ -37,48 +39,54 @@ public class TaskAirports {
         ResponseEntity<String> response = req.get(params);
         if (response.getStatusCode() == HttpStatus.OK) {
             String res = response.getBody();
-            System.out.println(res);
+//            System.out.println(res);
 
             Gson gson = new GsonBuilder().registerTypeAdapter(
                     LocalDateTime.class
                     , (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) -> MyTimestamp.parse(json.getAsString())
             ).create();
-            Wrapper<Airport> greeting = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
+            Wrapper<Airport> object = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
             }.getType());
-            logger.info(greeting);
-            if (greeting != null) {
-                Wrapper<Airport> reqMsg = gson.fromJson(
-                        gson.toJson(
-                                greeting.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
-                        ), new TypeToken<Wrapper<Airport>>() {
-                        }.getType()
-                );
+            logger.info(object);
+            if (object == null) return false;
+            Wrapper<Airport> reqMsg = gson.fromJson(
+                    gson.toJson(
+                            object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
+                    ), new TypeToken<Wrapper<Airport>>() {
+                    }.getType()
+            );
 
-                String thread = greeting.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
+            String thread = object.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
 
-                Map<String, Object> techInfo = reqMsg.getTechInfo();
+            Map<String, Object> techInfo = reqMsg.getTechInfo();
 
-                UUID reqUUID = reqMsg.getUuid();
-                UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
-                LocalDateTime respTime = greeting.getTimestamp();
-                LocalDateTime reqTime = reqMsg.getTimestamp();
-                LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
+            UUID reqUUID = reqMsg.getUuid();
+            UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
+            LocalDateTime respTime = object.getTimestamp();
+            LocalDateTime reqTime = reqMsg.getTimestamp();
+            LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
 
-//                System.out.println(Duration.between(reqTime, respTime).toString());
-                logger.info(Duration.between(reqTime, respTime).toString());
-                return Objects.equals(reqUUID, reqCliUUID)
-                        && Objects.equals(reqTime, reqCliTime)
-                        && Objects.equals(thread, Thread.currentThread().getName());
+            boolean flag = Objects.equals(reqUUID, reqCliUUID)
+                    && Objects.equals(reqTime, reqCliTime)
+                    && Objects.equals(thread, Thread.currentThread().getName());
+            if(flag)object.getContent().forEach(logger::info);
+            logger.info(Duration.between(reqTime, respTime).toString());
+            return flag;
 
-            }
         }
         return false;
     }
 
     public static void runAirports() {
         RequestSenderBuilder reqBuilder = new RequestSenderBuilder();
-        RequestSender<String> req = reqBuilder.build(new ParameterizedTypeReference<>() {
-        }, BasicUrlPrepared.preparedURL(CommonNames.URLStorage.URL_GREETING, CommonNames.ParamsNames.PARAM_ID, CommonNames.ParamsNames.PARAM_THREAD_NAME));
+        RequestSender<String> req = reqBuilder.build(
+                new ParameterizedTypeReference<>() {
+                }, BasicUrlPrepared.preparedURL(
+                        URL_WORK
+                        , CommonNames.ParamsNames.PARAM_ID
+                        , CommonNames.ParamsNames.PARAM_THREAD_NAME
+                )
+        );
 
         List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L);
 
@@ -104,7 +112,6 @@ public class TaskAirports {
                             return !(x.isDone() || x.isCancelled());
                         })
                         .collect(Collectors.toList());
-
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

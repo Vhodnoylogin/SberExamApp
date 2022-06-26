@@ -12,6 +12,7 @@ import restserviceg.controllers.decorator.NeDecorator;
 import restserviceg.logic.LookupOnAirportsFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 public class AirportByIdController {
@@ -25,10 +26,10 @@ public class AirportByIdController {
             HttpServletRequest request
             , @RequestParam("id") Long id
 //            , @RequestParam(required = false) UUID uuid
-//            , @RequestParam(required = false) Map<String, String> parameters
+            , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug(request.getServletPath());
         Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-        return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req);
+        return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req, parameters);
     }
 }

@@ -10,7 +10,6 @@ import com.google.gson.reflect.TypeToken;
 import help.CommonNames;
 import help.MyTimestamp;
 import models.Airport;
-import models.Greeting;
 import models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,54 +29,54 @@ public class TaskAirports {
     protected final static String URL_WORK = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
 
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
-        Logger logger = LogManager.getLogger(TaskGreeting.class);
+        Logger logger = LogManager.getLogger(TaskAirports.class);
 
         Map<String, Object> params = Map.of(
                 CommonNames.ParamsNames.PARAM_ID, id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
         ResponseEntity<String> response = req.get(params);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            String res = response.getBody();
-//            System.out.println(res);
+        if (response.getStatusCode() != HttpStatus.OK) return false;
+        String res = response.getBody();
 
-            Gson gson = new GsonBuilder().registerTypeAdapter(
-                    LocalDateTime.class
-                    , (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) -> MyTimestamp.parse(json.getAsString())
-            ).create();
-            Wrapper<Airport> object = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
-            }.getType());
-            logger.info(object);
-            if (object == null) return false;
-            Wrapper<Airport> reqMsg = gson.fromJson(
-                    gson.toJson(
-                            object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
-                    ), new TypeToken<Wrapper<Airport>>() {
-                    }.getType()
-            );
+        Gson gson = new GsonBuilder().registerTypeAdapter(
+                LocalDateTime.class
+                , (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) -> MyTimestamp.parse(json.getAsString())
+        ).create();
+        Wrapper<Airport> object = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
+        }.getType());
+        if (object == null) return false;
+        Wrapper<String> reqMsg = gson.fromJson(
+                gson.toJson(
+                        object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
+                ), new TypeToken<Wrapper<String>>() {
+                }.getType()
+        );
 
-            String thread = object.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
 
-            Map<String, Object> techInfo = reqMsg.getTechInfo();
+        String thread = object.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
 
-            UUID reqUUID = reqMsg.getUuid();
-            UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
-            LocalDateTime respTime = object.getTimestamp();
-            LocalDateTime reqTime = reqMsg.getTimestamp();
-            LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
+        Map<String, Object> techInfo = reqMsg.getTechInfo();
 
-            boolean flag = Objects.equals(reqUUID, reqCliUUID)
-                    && Objects.equals(reqTime, reqCliTime)
-                    && Objects.equals(thread, Thread.currentThread().getName());
-            if(flag)object.getContent().forEach(logger::info);
-            logger.info(Duration.between(reqTime, respTime).toString());
-            return flag;
 
-        }
-        return false;
+        UUID reqUUID = reqMsg.getUuid();
+        UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
+        LocalDateTime respTime = object.getTimestamp();
+        LocalDateTime reqTime = reqMsg.getTimestamp();
+        LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
+
+
+        boolean flag = Objects.equals(reqUUID, reqCliUUID)
+                && Objects.equals(reqTime, reqCliTime)
+                && Objects.equals(thread, Thread.currentThread().getName())
+                && object.getContentSize() > 0;
+        if (flag) object.getContent().forEach(logger::info);
+        logger.info(Duration.between(reqTime, respTime).getSeconds());
+        return flag;
     }
 
     public static void runAirports() {
+        final long startTime = System.currentTimeMillis();
         RequestSenderBuilder reqBuilder = new RequestSenderBuilder();
         RequestSender<String> req = reqBuilder.build(
                 new ParameterizedTypeReference<>() {
@@ -89,11 +88,12 @@ public class TaskAirports {
         );
 
         List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L);
+//        List<Long> listId = Arrays.asList(1L, 3L);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
         List<Future<Boolean>> futures = listId.stream()
                 .map((x) ->
-                        (Callable<Boolean>) () -> runningPart(req, x, Thread.currentThread().getName())
+                        (Callable<Boolean>) () -> runningPart(req, x + 1, Thread.currentThread().getName())
                 )
                 .map(pool::submit)
                 .collect(Collectors.toList());
@@ -101,7 +101,8 @@ public class TaskAirports {
         AtomicInteger countSucceed = new AtomicInteger();
         while (!futures.isEmpty()) {
             try {
-                Thread.sleep(500);
+//                Thread.sleep(1000);
+                Thread.sleep(1000);
                 futures = futures.stream()
                         .filter(x -> {
                             try {
@@ -118,5 +119,8 @@ public class TaskAirports {
         }
         System.out.println("Success task number = " + countSucceed);
         pool.shutdown();
+
+        final long endTime = System.currentTimeMillis();
+        System.out.println("Total execution time: " + (endTime - startTime) / 1000);
     }
 }

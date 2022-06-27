@@ -39,4 +39,8 @@ public class CommonNames {
         public static final String URL_AIRPORTS_GET_ALL = URL_AIRPORTS + "/get/all";
         public static final String URL_AIRPORTS_GET_BY_ID = URL_AIRPORTS + "/get";
     }
+
+    public static class Paths {
+        public static final String PATH_FILE_AIRPORT = "/data/airportsFull.dat";
+    }
 }

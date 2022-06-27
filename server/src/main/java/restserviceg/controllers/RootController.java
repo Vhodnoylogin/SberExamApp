@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -23,8 +24,11 @@ public class RootController {
     public Object greeting(
             HttpServletRequest request
             , @RequestParam(value = "name", defaultValue = "World") String name
+            , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug("greeting");
+        logger.info(name + " " + parameters.get("name"));
+
         return new Greeting(
                 UUID.randomUUID()
                 , String.format(template, name)

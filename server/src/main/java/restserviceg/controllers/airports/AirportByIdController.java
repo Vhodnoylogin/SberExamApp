@@ -13,6 +13,7 @@ import restserviceg.logic.LookupOnAirportsFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class AirportByIdController {
@@ -25,7 +26,7 @@ public class AirportByIdController {
     public Wrapper<Airport> getOneRow(
             HttpServletRequest request
             , @RequestParam("id") Long id
-//            , @RequestParam(required = false) UUID uuid
+            , @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
     ) {
         logger.debug(request.getServletPath());

@@ -20,9 +20,9 @@ public class Airport {
     @CsvBindByPosition(position = 7)
     protected Double longitude;
     @CsvBindByPosition(position = 8)
-    protected Double watiszis1;
+    protected String watiszis1;
     @CsvBindByPosition(position = 9)
-    protected Double watiszis2;
+    protected String watiszis2;
     @CsvBindByPosition(position = 10)
     protected String watiszis3;
     @CsvBindByPosition(position = 11)
@@ -64,11 +64,11 @@ public class Airport {
         return longitude;
     }
 
-    public Double getWatiszis1() {
+    public String getWatiszis1() {
         return watiszis1;
     }
 
-    public Double getWatiszis2() {
+    public String getWatiszis2() {
         return watiszis2;
     }
 

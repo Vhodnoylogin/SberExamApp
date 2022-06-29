@@ -8,6 +8,8 @@ public class CommonNames {
         public static final String FIELD_NAME_CONTENT_SIZE = "contentSize";
         public static final String FIELD_NAME_TECH_INFO = "techInfo";
         public static final String FIELD_NAME_CONTENT = "content";
+
+        public static final String FIELD_NAME_TYPE = "type";
     }
 
     public static class ErrorNames {

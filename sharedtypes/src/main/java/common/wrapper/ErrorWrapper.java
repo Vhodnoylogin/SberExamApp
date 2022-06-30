@@ -1,4 +1,4 @@
-package models.common;
+package common.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import help.CommonNames;

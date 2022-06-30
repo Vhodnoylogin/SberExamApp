@@ -1,4 +1,4 @@
-package models.types;
+package common.wrapper.types;
 
 public enum WrapperType {
     CONTENT("content"),

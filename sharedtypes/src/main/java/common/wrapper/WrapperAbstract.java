@@ -1,11 +1,11 @@
-package models.common;
+package common.wrapper;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import common.builder.Builder;
+import common.wrapper.types.WrapperType;
 import help.CommonNames;
 import help.MyTimestamp;
-import models.help.Builder;
-import models.types.WrapperType;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -70,6 +70,7 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 //        return wrap(WrapperAbstract::new, ArrayList::new);
 //    }
 
+    @Override
     public UUID getUuid() {
         return uuid;
     }
@@ -79,6 +80,7 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 //        this.uuid = uuid;
 //    }
 
+    @Override
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
@@ -97,6 +99,7 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 //        this.content = list;
 //    }
 
+    @Override
     public Map<String, Object> getTechInfo() {
         return techInfo;
     }
@@ -115,6 +118,11 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 //    }
 
     @Override
+    public WrapperType getType() {
+        return type;
+    }
+
+    @Override
     public String toString() {
         return "Wrapper{" +
                 "uuid=" + uuid +
@@ -125,9 +133,9 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
                 '}';
     }
 
-    public abstract static class WrapperAbstractBuilder<T, C extends WrapperAbstract<T>, B extends WrapperAbstractBuilder<T, C, B>>
+    protected abstract static class WrapperAbstractBuilder<T, C extends WrapperAbstract<T>, B extends WrapperAbstractBuilder<T, C, B>>
             extends Builder<C, B>
-            implements IWrapperBuilder<C, B> {
+            implements IWrapperBuilder<T, C, B> {
         protected UUID uuid;
         protected LocalDateTime timestamp;
         //        protected List<T> content;
@@ -150,13 +158,13 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
             if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return _this();
             if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return _this();
 
-            builderInstance.techInfo.put(key, val);
+            _this().techInfo.put(key, val);
             return _this();
         }
 
         @Override
         public B setType(WrapperType type) {
-            builderInstance.type = type;
+            _this().type = type;
             return _this();
         }
 
@@ -167,29 +175,30 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 
         @Override
         public B setUUID(UUID uuid) {
-            builderInstance.uuid = uuid;
+            _this().uuid = uuid;
             return _this();
         }
 
         @Override
         public B setTimestamp(LocalDateTime timestamp) {
-            builderInstance.timestamp = timestamp;
+            _this().timestamp = timestamp;
             return _this();
         }
 
         @Override
         public B setTimestamp(String timestamp) {
-            builderInstance.timestamp = MyTimestamp.parse(timestamp);
+            _this().timestamp = MyTimestamp.parse(timestamp);
             return _this();
         }
 
         @Override
         public C build() {
             C objectInstance = super.build();
-            objectInstance.uuid = builderInstance.uuid;
-            objectInstance.timestamp = builderInstance.timestamp;
-            objectInstance.type = builderInstance.type;
-            objectInstance.techInfo = builderInstance.techInfo;
+
+            objectInstance.uuid = _this().uuid;
+            objectInstance.timestamp = _this().timestamp;
+            objectInstance.type = _this().type;
+            objectInstance.techInfo.putAll(_this().techInfo);
 
             return objectInstance;
         }

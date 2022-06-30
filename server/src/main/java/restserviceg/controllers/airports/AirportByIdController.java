@@ -1,8 +1,8 @@
 package restserviceg.controllers.airports;
 
+import common.wrapper.Wrapper;
 import help.CommonNames;
 import models.Airport;
-import models.common.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.ExceptionHandler;

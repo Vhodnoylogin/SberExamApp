@@ -1,9 +1,9 @@
-package models.common;
+package common.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import common.builder.IBuilder;
+import common.wrapper.types.WrapperType;
 import help.CommonNames;
-import models.help.IBuilder;
-import models.types.WrapperType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,10 +51,10 @@ public interface IWrapper<T> {
         B setTimestamp(String timestamp);
     }
 
-    interface WrapperBuilderContent<T, B extends WrapperBuilderContent<T, B>> {
-        B setContent(T content);
+    interface WrapperBuilderContent<I, T, B extends WrapperBuilderContent<I, T, B>> {
+        B setContent(I content);
 
-        B setTimestamp(List<T> content);
+        B setContent(List<I> content);
     }
 
     interface WrapperBuilderTechInfo<B extends WrapperBuilderTechInfo<B>> {
@@ -67,7 +67,7 @@ public interface IWrapper<T> {
         B setType(String type);
     }
 
-    interface IWrapperBuilder<T, B extends IWrapperBuilder<T, B>>
-            extends IBuilder<T, B>, WrapperBuilderUUID<B>, WrapperBuilderTimestamp<B>, WrapperBuilderTechInfo<B>, WrapperBuilderType<B>, WrapperBuilderContent<T, B> {
+    interface IWrapperBuilder<I, T, B extends IWrapperBuilder<I, T, B>>
+            extends IBuilder<T, B>, WrapperBuilderUUID<B>, WrapperBuilderTimestamp<B>, WrapperBuilderTechInfo<B>, WrapperBuilderType<B>, WrapperBuilderContent<I, T, B> {
     }
 }

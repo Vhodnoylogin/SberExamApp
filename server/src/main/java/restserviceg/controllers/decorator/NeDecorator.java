@@ -1,9 +1,9 @@
 package restserviceg.controllers.decorator;
 
+import common.wrapper.ErrorWrapper;
+import common.wrapper.Wrapper;
 import help.CommonNames;
 import help.MyTimestamp;
-import models.common.ErrorWrapper;
-import models.common.Wrapper;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;

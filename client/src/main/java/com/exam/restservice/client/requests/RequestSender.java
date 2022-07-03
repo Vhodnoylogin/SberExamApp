@@ -1,6 +1,6 @@
 package com.exam.restservice.client.requests;
 
-import help.CommonNames;
+import common.help.CommonNames;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;

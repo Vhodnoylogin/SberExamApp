@@ -1,7 +1,7 @@
 package com.exam.restserviceg.tests;
 
 
-import models.Airport;
+import common.models.Airport;
 import org.junit.jupiter.api.Assertions;
 import restserviceg.logic.LookupOnAirportsFile;
 import restserviceg.logic.exceptions.RecordNotFoundException;

@@ -1,8 +1,8 @@
 package restserviceg.logic;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import help.CommonNames;
-import models.Airport;
+import common.help.CommonNames;
+import common.models.Airport;
 import org.springframework.core.io.ClassPathResource;
 import restserviceg.logic.exceptions.RecordNotFoundException;
 

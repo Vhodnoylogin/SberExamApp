@@ -1,7 +1,7 @@
 package test;
 
 
-import help.MyTimestamp;
+import common.help.MyTimestamp;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.LocalDateTime;

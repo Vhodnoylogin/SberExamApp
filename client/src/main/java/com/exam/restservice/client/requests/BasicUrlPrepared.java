@@ -1,6 +1,6 @@
 package com.exam.restservice.client.requests;
 
-import help.CommonNames;
+import common.help.CommonNames;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Arrays;

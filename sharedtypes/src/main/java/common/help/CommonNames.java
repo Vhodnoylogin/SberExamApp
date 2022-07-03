@@ -1,4 +1,4 @@
-package help;
+package common.help;
 
 public class CommonNames {
     public static class WrapperNames {
@@ -13,7 +13,6 @@ public class CommonNames {
     }
 
     public static class ErrorNames {
-
         public static final String FIELD_NAME_ERROR = "error";
         public static final String FIELD_NAME_ERROR_MESSAGE = "errorMessage";
     }

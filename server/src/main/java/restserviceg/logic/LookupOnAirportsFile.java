@@ -1,10 +1,11 @@
 package restserviceg.logic;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import common.help.CommonNames;
+import common.constant.CommonNames;
+import common.constant.CommonPath;
+import restserviceg.logic.exceptions.RecordNotFoundException;
 import common.models.Airport;
 import org.springframework.core.io.ClassPathResource;
-import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import java.io.File;
 import java.io.FileReader;
@@ -13,22 +14,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class LookupOnAirportsFile {
-    protected static final String FILE_AIRPORT_PATH = CommonNames.Paths.PATH_FILE_AIRPORT;
-
     protected static Map<Long, Airport> cashedFile;
     protected final static Object mutex = new Object();
 
     protected static Map<Long, Airport> getFromFile() throws IOException {
-        File f = new ClassPathResource(
-                FILE_AIRPORT_PATH
-                , LookupOnAirportsFile.class.getClassLoader()
-        ).getFile();
-//        CSVReaderBuilder csvReaderBuilder = new CSVReaderBuilder(new FileReader(f))
-//                .withCSVParser(
-//                        new RFC4180ParserBuilder().build()
-//                );
         return Collections.unmodifiableMap(
-                new CsvToBeanBuilder<Airport>(new FileReader(f))
+                new CsvToBeanBuilder<Airport>(new FileReader(CommonPath.FILE_AIRPORT))
                         .withType(Airport.class)
 //                        .withQuoteChar('"')
                         .withIgnoreEmptyLine(true)

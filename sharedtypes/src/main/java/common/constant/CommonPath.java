@@ -1,4 +1,4 @@
-package common.help;
+package common.constant;
 
 import org.springframework.core.io.ClassPathResource;
 
@@ -9,10 +9,10 @@ public class CommonPath {
     public static final File FILE_AIRPORT;
 
     static {
+
         try {
-            final String PATH_FILE_AIRPORT = "/data/airports.dat";
             FILE_AIRPORT = new ClassPathResource(
-                    PATH_FILE_AIRPORT
+                    CommonNames.Paths.PATH_FILE_AIRPORT
                     , CommonPath.class.getClassLoader()
             ).getFile();
         } catch (IOException e) {

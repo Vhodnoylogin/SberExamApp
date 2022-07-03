@@ -2,7 +2,7 @@ package common.wrapper;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.wrapper.types.WrapperType;
 import org.springframework.lang.NonNull;
 

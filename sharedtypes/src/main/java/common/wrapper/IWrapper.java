@@ -3,7 +3,7 @@ package common.wrapper;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import common.builder.IBuilder;
 import common.fluentinterface.FluentInterface;
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.wrapper.types.WrapperType;
 
 import java.time.LocalDateTime;

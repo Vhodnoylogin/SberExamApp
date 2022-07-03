@@ -1,6 +1,6 @@
 package restserviceg.controllers.other;
 
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

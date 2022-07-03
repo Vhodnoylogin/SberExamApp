@@ -1,4 +1,4 @@
-package common.help;
+package common.constant;
 
 public class CommonNames {
     public static class WrapperNames {

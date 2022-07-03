@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.LogManager;

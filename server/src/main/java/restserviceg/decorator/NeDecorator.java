@@ -1,6 +1,6 @@
 package restserviceg.decorator;
 
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.Logger;

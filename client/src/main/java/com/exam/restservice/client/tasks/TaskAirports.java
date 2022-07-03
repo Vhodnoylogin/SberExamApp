@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import common.models.Airport;
 import common.wrapper.Wrapper;
@@ -28,8 +28,11 @@ public class TaskAirports {
 
     protected final static String URL_WORK = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
 
+    protected static Logger logger = LogManager.getLogger(TaskAirports.class);
+
+
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
-        Logger logger = LogManager.getLogger(TaskAirports.class);
+//        Logger logger = LogManager.getLogger(TaskAirports.class);
 
         Map<String, Object> params = Map.of(
                 CommonNames.ParamsNames.PARAM_ID, id
@@ -102,7 +105,7 @@ public class TaskAirports {
         while (!futures.isEmpty()) {
             try {
 //                Thread.sleep(1000);
-                Thread.sleep(1000);
+                Thread.sleep(10);
                 futures = futures.stream()
                         .filter(x -> {
                             try {
@@ -117,10 +120,10 @@ public class TaskAirports {
                 throw new RuntimeException(e);
             }
         }
-        System.out.println("Success task number = " + countSucceed);
+        logger.info("Success task number = " + countSucceed);
         pool.shutdown();
 
         final long endTime = System.currentTimeMillis();
-        System.out.println("Total execution time: " + (endTime - startTime) / 1000);
+        logger.info("Total execution time: " + (endTime - startTime) / 1000);
     }
 }

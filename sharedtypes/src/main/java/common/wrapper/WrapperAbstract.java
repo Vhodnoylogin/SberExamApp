@@ -3,7 +3,7 @@ package common.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import common.builder.Builder;
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import common.wrapper.types.WrapperType;
 

@@ -1,6 +1,6 @@
 package restserviceg.controllers.airports;
 
-import common.help.CommonNames;
+import common.constant.CommonNames;
 import common.models.Airport;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.LogManager;

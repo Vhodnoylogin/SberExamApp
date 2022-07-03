@@ -1,15 +1,12 @@
 package restserviceg.controllers.airports;
 
+import common.help.CommonNames;
+import common.models.Airport;
 import common.wrapper.Wrapper;
-import help.CommonNames;
-import models.Airport;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.bind.annotation.*;
+import restserviceg.controllers.decorator.Decorator;
 import restserviceg.controllers.decorator.NeDecorator;
 import restserviceg.logic.LookupOnAirportsFile;
 import restserviceg.logic.exceptions.RecordNotFoundException;
@@ -19,25 +16,33 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@RequestMapping(CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID)
 public class AirportByIdController {
-    protected final String PATH_ACTION_GET_BY_ID = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
+//    protected final String PATH_ACTION_GET_BY_ID = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
 
     protected static final Logger logger = LogManager.getLogger(AirportByIdController.class);
 
-    @GetMapping(PATH_ACTION_GET_BY_ID)
+    //    @GetMapping(PATH_ACTION_GET_BY_ID)
+    @GetMapping
     public Wrapper<Airport> getRowById(
             HttpServletRequest request
             , @RequestParam("id") Long id
             , @RequestParam(required = false) UUID uuid
             , @RequestParam(required = false) Map<String, String> parameters
-    ) {
-        logger.debug(request.getServletPath());
-        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-        return NeDecorator.buildResponse(() -> LookupOnAirportsFile.getDataById(id), logger, req, parameters);
+    ) throws Exception {
+        return Decorator.<Airport>decorator()
+                .logLeaderMessage("getRowById")
+                .setLogger(logger)
+                .setRequest(request)
+                .addRequestParams(parameters)
+                .addRequestParams(CommonNames.ParamsNames.PARAM_UUID, uuid)
+                .addRequestParams(CommonNames.ParamsNames.PARAM_ID, id)
+                .setContent(() -> LookupOnAirportsFile.getDataById(id))
+                .decorate();
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public String exceptionHandlerRecordNotFound(RecordNotFoundException e, WebRequest request) {
-        return e.getMessage();
+    public Wrapper<Airport> exceptionHandlerRecordNotFound(RecordNotFoundException e, HttpServletRequest request) {
+        return NeDecorator.error(logger, e, request);
     }
 }

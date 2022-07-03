@@ -1,7 +1,7 @@
 package restserviceg.controllers;
 
-import help.CommonNames;
-import models.Greeting;
+import common.help.CommonNames;
+import common.models.Greeting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;

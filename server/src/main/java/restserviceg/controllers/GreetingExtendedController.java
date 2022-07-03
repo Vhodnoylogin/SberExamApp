@@ -1,39 +1,53 @@
 package restserviceg.controllers;
 
+import common.help.CommonNames;
 import common.wrapper.Wrapper;
-import help.CommonNames;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import restserviceg.controllers.decorator.Decorator;
 import restserviceg.controllers.decorator.NeDecorator;
+import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 
 @RestController
+@RequestMapping(CommonNames.URLStorage.URL_GREETING)
 public class GreetingExtendedController {
     protected static final Logger logger = LogManager.getLogger(GreetingExtendedController.class);
 
-    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT + CommonNames.URLStorage.URL_GREETING;
+//    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT + CommonNames.URLStorage.URL_GREETING;
 
-    //    @ExceptionHandler(RuntimeException.class)
-    @GetMapping(URL_WORK)
+    //    @GetMapping(URL_WORK)
+    @GetMapping
     public Wrapper<Void> greeting(
             HttpServletRequest request
             , @RequestParam(required = false) Map<String, String> parameters
-    ) {
-        logger.debug(request.getServletPath());
+    ) throws Exception {
+//        logger.debug(request.getServletPath());
+//
+//        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
+////        try {
+////            Thread.sleep(5000);
+////        } catch (InterruptedException e) {
+////            return null;
+////        }
+//
+//        return NeDecorator.buildResponseList(() -> null, logger, req, parameters);
 
-        Wrapper<String> req = NeDecorator.buildRequest(request, logger);
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            return null;
-//        }
+        return Decorator.<Void>decorator()
+                .logLeaderMessage("greeting")
+                .setLogger(logger)
+                .setRequest(request)
+                .addRequestParams(parameters)
+//                .setContentList(LookupOnAirportsFile::getAllData)
+                .decorate();
+    }
 
-        return NeDecorator.buildResponseList(() -> null, logger, req, parameters);
+    @ExceptionHandler(RecordNotFoundException.class)
+    public Wrapper<Void> exceptionHandlerRecordNotFound(RecordNotFoundException e, HttpServletRequest request) {
+        return NeDecorator.error(logger, e, request);
     }
 }

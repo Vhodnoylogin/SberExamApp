@@ -20,7 +20,7 @@ public class MultiPathController {
     @GetMapping
     public Object run(
             HttpServletRequest request
-//            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) UUID uuid
+//            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) String uuid
 //            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) String timestamp
             , @RequestParam(required = false) Map<String, Object> parameters
     ) throws Exception {

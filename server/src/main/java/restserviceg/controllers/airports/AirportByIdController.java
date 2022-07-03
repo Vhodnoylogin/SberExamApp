@@ -14,9 +14,7 @@ import restserviceg.logic.LookupOnAirportsFile;
 import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID)
@@ -30,8 +28,8 @@ public class AirportByIdController {
     public Wrapper<Airport> getRowById(
             HttpServletRequest request
             , @RequestParam(CommonNames.ParamsNames.PARAM_ID) Long id
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) UUID uuid
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) LocalDateTime timestamp
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) String uuid
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) String timestamp
             , @RequestParam(required = false) Map<String, Object> parameters
     ) throws Exception {
         return Decorator.<Airport>decorator()
@@ -47,7 +45,7 @@ public class AirportByIdController {
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<Object> handleExceptionRecordNotFoundException(Exception e, HttpServletRequest request) {
         return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .status(HttpStatus.NOT_FOUND)
                 .body(NeDecorator.error(logger, e, request));
     }
 }

@@ -14,9 +14,7 @@ import restserviceg.logic.LookupOnAirportsFile;
 import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping(CommonNames.URLStorage.URL_AIRPORTS_GET_ALL)
@@ -28,8 +26,8 @@ public class AllAirportsController {
     @GetMapping
     public Wrapper<Airport> getAllRows(
             HttpServletRequest request
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) UUID uuid
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) LocalDateTime timestamp
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) String uuid
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) String timestamp
             , @RequestParam(required = false) Map<String, String> parameters
     ) throws Exception {
         return Decorator.<Airport>decorator()

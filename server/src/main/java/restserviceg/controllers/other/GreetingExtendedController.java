@@ -11,9 +11,7 @@ import restserviceg.decorator.Decorator;
 import restserviceg.decorator.NeDecorator;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.UUID;
 
 
 @RestController
@@ -23,8 +21,8 @@ public class GreetingExtendedController {
     @GetMapping
     public Wrapper<Void> greeting(
             HttpServletRequest request
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) UUID uuid
-            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) LocalDateTime timestamp
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) String uuid
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) String timestamp
             , @RequestParam(required = false) Map<String, String> parameters
     ) throws Exception {
 

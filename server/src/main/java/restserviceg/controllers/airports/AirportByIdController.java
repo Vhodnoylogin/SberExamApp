@@ -5,13 +5,16 @@ import common.models.Airport;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restserviceg.controllers.decorator.Decorator;
-import restserviceg.controllers.decorator.NeDecorator;
+import restserviceg.decorator.Decorator;
+import restserviceg.decorator.NeDecorator;
 import restserviceg.logic.LookupOnAirportsFile;
 import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
@@ -26,23 +29,25 @@ public class AirportByIdController {
     @GetMapping
     public Wrapper<Airport> getRowById(
             HttpServletRequest request
-            , @RequestParam("id") Long id
-            , @RequestParam(required = false) UUID uuid
-            , @RequestParam(required = false) Map<String, String> parameters
+            , @RequestParam(CommonNames.ParamsNames.PARAM_ID) Long id
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_UUID) UUID uuid
+            , @RequestParam(required = false, name = CommonNames.ParamsNames.PARAM_TIMESTAMP) LocalDateTime timestamp
+            , @RequestParam(required = false) Map<String, Object> parameters
     ) throws Exception {
         return Decorator.<Airport>decorator()
                 .logLeaderMessage("getRowById")
                 .setLogger(logger)
                 .setRequest(request)
                 .addRequestParams(parameters)
-                .addRequestParams(CommonNames.ParamsNames.PARAM_UUID, uuid)
                 .addRequestParams(CommonNames.ParamsNames.PARAM_ID, id)
                 .setContent(() -> LookupOnAirportsFile.getDataById(id))
                 .decorate();
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public Wrapper<Airport> exceptionHandlerRecordNotFound(RecordNotFoundException e, HttpServletRequest request) {
-        return NeDecorator.error(logger, e, request);
+    public ResponseEntity<Object> handleExceptionRecordNotFoundException(Exception e, HttpServletRequest request) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(NeDecorator.error(logger, e, request));
     }
 }

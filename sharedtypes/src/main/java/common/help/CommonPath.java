@@ -10,7 +10,7 @@ public class CommonPath {
 
     static {
         try {
-            final String PATH_FILE_AIRPORT = "/data/airportsFull.dat";
+            final String PATH_FILE_AIRPORT = "/data/airports.dat";
             FILE_AIRPORT = new ClassPathResource(
                     PATH_FILE_AIRPORT
                     , CommonPath.class.getClassLoader()

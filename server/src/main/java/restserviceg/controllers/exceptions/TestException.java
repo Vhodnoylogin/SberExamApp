@@ -27,9 +27,9 @@ public class TestException {
 //    }
 
     @ExceptionHandler(RecordNotFoundException.class)
-    public ResponseEntity<String> handleExceptionRecordNotFoundException(Exception e) {
+    public ResponseEntity<Exception> handleExceptionRecordNotFoundException(Exception e) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(e.getMessage());
+                .body(e);
     }
 }

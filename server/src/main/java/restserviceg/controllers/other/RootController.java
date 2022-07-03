@@ -1,10 +1,11 @@
-package restserviceg.controllers;
+package restserviceg.controllers.other;
 
 import common.help.CommonNames;
 import common.models.Greeting;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,14 +14,12 @@ import java.util.Map;
 import java.util.UUID;
 
 @RestController
+@RequestMapping(CommonNames.URLStorage.URL_ROOT)
 public class RootController {
-
-    protected static final String URL_WORK = CommonNames.URLStorage.URL_ROOT;
     protected static final Logger logger = LogManager.getLogger(RootController.class);
     protected static final String template = "Hello, %s!";
-//    protected final AtomicLong counter = new AtomicLong();
 
-    @GetMapping(URL_WORK)
+    @GetMapping
     public Object greeting(
             HttpServletRequest request
             , @RequestParam(value = "name", defaultValue = "World") String name

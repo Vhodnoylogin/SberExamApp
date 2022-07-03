@@ -9,16 +9,35 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 
 // хотел сделать декоратор для того, чтобы не писать каждый раз обвязку в методах-маппингах, но не додумался.
 // пусть пока будет так.
 public class NeDecorator {
-
-    public static Wrapper<String> buildRequest(HttpServletRequest request, Map<String, ?> parameters) {
-        UUID uuid = UUID.fromString(request.getParameter(CommonNames.WrapperNames.FIELD_NAME_UUID));
-        LocalDateTime timestamp = MyTimestamp.parse(request.getParameter(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP));
+    public static Wrapper<String> buildRequest(HttpServletRequest request, Map<String, ?> parameters, Map<String, ?> namedParameters) {
+//        UUID uuid = Optional.ofNullable(request)
+//                .map(x -> x.getParameter(CommonNames.WrapperNames.FIELD_NAME_UUID))
+//                .map(UUID::fromString)
+//                .orElse(null);
+//        LocalDateTime timestamp = Optional.ofNullable(request)
+//                .map(x ->x.getParameter(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP))
+//                .map(MyTimestamp::parse)
+//                .orElse(null);
+        String urlPath = Optional.ofNullable(request)
+                .map(HttpServletRequest::getServletPath)
+                .orElse(null);
+        UUID uuid = Optional.ofNullable(namedParameters)
+                .map(x -> x.get(CommonNames.WrapperNames.FIELD_NAME_UUID))
+                .map(Object::toString)
+                .map(UUID::fromString)
+                .orElse(null);
+        LocalDateTime timestamp = Optional.ofNullable(namedParameters)
+                .map(x -> x.get(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP))
+                .map(Object::toString)
+                .map(MyTimestamp::parse)
+                .orElse(null);
 
         return Wrapper.<String>builder()
                 .setUUID(uuid)
@@ -26,13 +45,13 @@ public class NeDecorator {
                 .addTechInfo(CommonNames.ParamsNames.PARAM_CLIENT_UUID, uuid)
                 .addTechInfo(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP, timestamp)
                 .addTechInfo(parameters)
-                .setContent(request.getServletPath())
+                .setContent(urlPath)
                 .build();
     }
 
-    public static Wrapper<String> buildRequest(HttpServletRequest request) {
-        return buildRequest(request, null);
-    }
+//    public static Wrapper<String> buildRequest(HttpServletRequest request) {
+//        return buildRequest(request, null);
+//    }
 
 
     public static <T> Wrapper<T> buildResponse(List<T> content, Wrapper<String> request) {
@@ -44,11 +63,18 @@ public class NeDecorator {
 
     public static <T> Wrapper<T> error(Logger logger, Exception e, HttpServletRequest request) {
         logger.error(e);
-        Wrapper<String> req = NeDecorator.buildRequest(request);
+        Wrapper<String> req = NeDecorator.buildRequest(request, null, null);
         logger.error(req);
         return Wrapper.<T>builder()
                 .setException(e)
                 .addTechInfo(CommonNames.ParamsNames.PARAM_REQUEST, req)
+                .build();
+    }
+
+    public static <T> Wrapper<T> error(Logger logger, Exception e) {
+        logger.error(e);
+        return Wrapper.<T>builder()
+                .setException(e)
                 .build();
     }
 }

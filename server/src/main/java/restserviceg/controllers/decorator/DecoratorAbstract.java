@@ -48,6 +48,7 @@ public abstract class DecoratorAbstract<T, D extends DecoratorAbstract<T, D>> im
     }
 
     public D addRequestParams(Map<String, ?> parameters) {
+        if (parameters == null) return _this();
         this.parameters.putAll(parameters);
         return _this();
     }
@@ -61,6 +62,12 @@ public abstract class DecoratorAbstract<T, D extends DecoratorAbstract<T, D>> im
     public D addNamedParams(String key, Object value) {
         if (key == null) return _this();
         this.namedParameters.put(key, value);
+        return _this();
+    }
+
+    public D addNamedParams(Map<String, ?> parameters) {
+        if (parameters == null) return _this();
+        this.namedParameters.putAll(parameters);
         return _this();
     }
 

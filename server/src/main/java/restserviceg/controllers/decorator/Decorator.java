@@ -12,15 +12,16 @@ public class Decorator<T> extends DecoratorAbstract<T, Decorator<T>> {
 
     @Override
     public Decorator<T> _this() {
-        return new Decorator<>();
+        return this;
     }
 
     @Override
     public Wrapper<T> decorate() throws Exception {
         if (this.leadingMessage != null) this.logger.info(this.leadingMessage);
+        System.out.println(this.logger);
 
         //build request
-        Wrapper<String> request = NeDecorator.buildRequest(this.request, this.parameters);
+        Wrapper<String> request = NeDecorator.buildRequest(this.request, this.parameters, this.namedParameters);
         this.logger.info(request);
 
         List<T> content = this.genContent == null ?

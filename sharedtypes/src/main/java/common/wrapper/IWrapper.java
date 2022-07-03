@@ -33,6 +33,13 @@ public interface IWrapper<T> {
     @JsonGetter(CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE)
     Long getContentSize();
 
+
+    @JsonGetter(CommonNames.ErrorNames.FIELD_NAME_ERROR)
+    Exception getError();
+
+    @JsonGetter(CommonNames.ErrorNames.FIELD_NAME_ERROR_MESSAGE)
+    String getErrorMessage();
+
 //    void addTechInfo(String key, Object val);
 
     @JsonGetter(CommonNames.WrapperNames.FIELD_NAME_TECH_INFO)
@@ -51,23 +58,30 @@ public interface IWrapper<T> {
         B setTimestamp(String timestamp);
     }
 
-    interface WrapperBuilderContent<I, T, B extends WrapperBuilderContent<I, T, B>> {
-        B setContent(I content);
+    interface WrapperBuilderContent<D, T, B extends WrapperBuilderContent<D, T, B>> {
+        B setContent(D content);
 
-        B setContent(List<I> content);
+        B setContent(List<D> content);
     }
+
+    interface WrapperBuilderError<E extends Exception, T, B extends WrapperBuilderError<E, T, B>> {
+        B setException(E content);
+
+        B setErrorMessage(String msg);
+    }
+
 
     interface WrapperBuilderTechInfo<B extends WrapperBuilderTechInfo<B>> {
         B addTechInfo(String key, Object val);
     }
 
     interface WrapperBuilderType<B extends WrapperBuilderType<B>> {
-        B setType(WrapperType type);
-
-        B setType(String type);
+//        B setType(WrapperType type);
+//
+////        B setType(String type);
     }
 
     interface IWrapperBuilder<I, T, B extends IWrapperBuilder<I, T, B>>
-            extends IBuilder<T, B>, WrapperBuilderUUID<B>, WrapperBuilderTimestamp<B>, WrapperBuilderTechInfo<B>, WrapperBuilderType<B>, WrapperBuilderContent<I, T, B> {
+            extends IBuilder<T, B>, WrapperBuilderUUID<B>, WrapperBuilderTimestamp<B>, WrapperBuilderTechInfo<B>, WrapperBuilderType<B>, WrapperBuilderContent<I, T, B>, WrapperBuilderError<Exception, T, B> {
     }
 }

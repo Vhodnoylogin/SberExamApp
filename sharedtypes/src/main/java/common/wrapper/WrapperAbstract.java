@@ -6,6 +6,7 @@ import common.builder.Builder;
 import common.wrapper.types.WrapperType;
 import help.CommonNames;
 import help.MyTimestamp;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -27,11 +28,11 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
     @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_TYPE)
     protected WrapperType type;
 
-    protected WrapperAbstract() {
-        this.timestamp = LocalDateTime.now();
-        this.uuid = UUID.randomUUID();
-        this.techInfo = new HashMap<>();
-    }
+//    protected WrapperAbstract() {
+//        this.timestamp = LocalDateTime.now();
+//        this.uuid = UUID.randomUUID();
+//        this.techInfo = new HashMap<>();
+//    }
 
 //    public void setTimestamp(LocalDateTime timestamp) {
 //        if (timestamp == null) return;
@@ -138,10 +139,15 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
             implements IWrapperBuilder<T, C, B> {
         protected UUID uuid;
         protected LocalDateTime timestamp;
-        //        protected List<T> content;
-//        protected Long contentSize;
         protected Map<String, Object> techInfo;
-        protected WrapperType type;
+//        protected WrapperType type;
+
+        {
+            this.uuid = UUID.randomUUID();
+            this.timestamp = LocalDateTime.now();
+//            this.
+            this.techInfo = new HashMap<>();
+        }
 
         //        @Override
 //        public B setContent(List<C> content) {
@@ -162,31 +168,32 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
             return _this();
         }
 
-        @Override
-        public B setType(WrapperType type) {
-            _this().type = type;
-            return _this();
-        }
+//        @Override
+//        public B setType(WrapperType type) {
+//            _this().type = type;
+//            return _this();
+//        }
+//
+////        @Override
+////        public B setType(String type) {
+////
+////            return _this();
+////        }
 
         @Override
-        public B setType(String type) {
-            return _this();
-        }
-
-        @Override
-        public B setUUID(UUID uuid) {
+        public B setUUID(@NonNull UUID uuid) {
             _this().uuid = uuid;
             return _this();
         }
 
         @Override
-        public B setTimestamp(LocalDateTime timestamp) {
+        public B setTimestamp(@NonNull LocalDateTime timestamp) {
             _this().timestamp = timestamp;
             return _this();
         }
 
         @Override
-        public B setTimestamp(String timestamp) {
+        public B setTimestamp(@NonNull String timestamp) {
             _this().timestamp = MyTimestamp.parse(timestamp);
             return _this();
         }
@@ -197,8 +204,11 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 
             objectInstance.uuid = _this().uuid;
             objectInstance.timestamp = _this().timestamp;
-            objectInstance.type = _this().type;
             objectInstance.techInfo.putAll(_this().techInfo);
+//            objectInstance.type = _this().type;
+
+            objectInstance.type = WrapperType.EMPTY;
+
 
             return objectInstance;
         }

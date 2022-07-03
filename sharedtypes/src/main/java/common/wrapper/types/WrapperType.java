@@ -2,7 +2,8 @@ package common.wrapper.types;
 
 public enum WrapperType {
     CONTENT("content"),
-    ERROR("error");
+    ERROR("error"),
+    EMPTY("empty");
     private final String type;
 
     WrapperType(String type) {

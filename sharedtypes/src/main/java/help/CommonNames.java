@@ -15,7 +15,7 @@ public class CommonNames {
     public static class ErrorNames {
 
         public static final String FIELD_NAME_ERROR = "error";
-        public static final String FIELD_NAME_ERROR_CLASSNAME = "errorClassName";
+        public static final String FIELD_NAME_ERROR_MESSAGE = "errorMessage";
     }
 
     public static class ParamsNames {

@@ -1,4 +1,4 @@
-package restserviceg.controllers.decorator;
+package restserviceg.decorator;
 
 import common.wrapper.Wrapper;
 
@@ -18,10 +18,14 @@ public class Decorator<T> extends DecoratorAbstract<T, Decorator<T>> {
     @Override
     public Wrapper<T> decorate() throws Exception {
         if (this.leadingMessage != null) this.logger.info(this.leadingMessage);
-        System.out.println(this.logger);
 
+//        this.parameters.put(CommonNames.ParamsNames.PARAM_CLIENT_UUID, this.parameters.getOrDefault(CommonNames.ParamsNames.PARAM_UUID, null));
+//        this.parameters.put(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP, this.parameters.getOrDefault(CommonNames.ParamsNames.PARAM_TIMESTAMP, null));
+//        this.parameters.remove(CommonNames.ParamsNames.PARAM_ID);
+//        this.parameters.remove(CommonNames.ParamsNames.PARAM_UUID);
+//        this.parameters.remove(CommonNames.ParamsNames.PARAM_TIMESTAMP);
         //build request
-        Wrapper<String> request = NeDecorator.buildRequest(this.request, this.parameters, this.namedParameters);
+        Wrapper<String> request = NeDecorator.buildRequest(this.request, this.parameters);
         this.logger.info(request);
 
         List<T> content = this.genContent == null ?

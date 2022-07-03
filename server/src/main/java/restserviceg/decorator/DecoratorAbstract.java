@@ -1,10 +1,11 @@
-package restserviceg.controllers.decorator;
+package restserviceg.decorator;
 
 import common.fluentinterface.FluentInterface;
 import common.wrapper.Wrapper;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,7 @@ public abstract class DecoratorAbstract<T, D extends DecoratorAbstract<T, D>> im
     protected HttpServletRequest request;
 
     protected Map<String, Object> parameters;
-    protected Map<String, Object> namedParameters;
+//    protected Map<String, Object> namedParameters;
 
     protected Callable<List<T>> genContentList;
     protected Callable<T> genContent;
@@ -26,7 +27,8 @@ public abstract class DecoratorAbstract<T, D extends DecoratorAbstract<T, D>> im
 
     {
         parameters = new HashMap<>();
-        namedParameters = new HashMap<>();
+//        namedParameters = new HashMap<>();
+        genContentList = ArrayList::new;
     }
 
 
@@ -59,17 +61,17 @@ public abstract class DecoratorAbstract<T, D extends DecoratorAbstract<T, D>> im
         return _this();
     }
 
-    public D addNamedParams(String key, Object value) {
-        if (key == null) return _this();
-        this.namedParameters.put(key, value);
-        return _this();
-    }
+//    public D addNamedParams(String key, Object value) {
+//        if (key == null) return _this();
+//        this.namedParameters.put(key, value);
+//        return _this();
+//    }
 
-    public D addNamedParams(Map<String, ?> parameters) {
-        if (parameters == null) return _this();
-        this.namedParameters.putAll(parameters);
-        return _this();
-    }
+//    public D addNamedParams(Map<String, ?> parameters) {
+//        if (parameters == null) return _this();
+//        this.namedParameters.putAll(parameters);
+//        return _this();
+//    }
 
     public D setContentList(Callable<List<T>> genContentList) {
         if (genContentList == null) return _this();

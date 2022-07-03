@@ -27,95 +27,23 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
     @JsonProperty(CommonNames.WrapperNames.FIELD_NAME_TYPE)
     protected WrapperType type;
 
-//    protected WrapperAbstract() {
-//        this.timestamp = LocalDateTime.now();
-//        this.uuid = UUID.randomUUID();
-//        this.techInfo = new HashMap<>();
-//    }
-
-//    public void setTimestamp(LocalDateTime timestamp) {
-//        if (timestamp == null) return;
-//        this.timestamp = timestamp;
-//    }
-
-//    protected static <R, W extends WrapperAbstract<R>, L extends List<R>> W wrap(Supplier<W> gen, Supplier<L> data) {
-//        W wrapper = gen.get();
-//        wrapper.setContent(data.get());
-//
-//        try {
-//            wrapper.contentSize = (long) wrapper.content.size();
-//        } catch (Exception e) {
-//            wrapper.contentSize = 0L;
-//        }
-////        wrapper.contentSize = (long) Optional.of(wrapper.content.size()).orElse(0);
-//        return wrapper;
-//    }
-
-//    public void setTimestamp(String timestamp) {
-//        this.setTimestamp(MyTimestamp.parse(timestamp));
-//    }
-
-//    public static <R, L extends List<R>> WrapperAbstract<R> wrap(L data) {
-//        return wrap(WrapperAbstract::new, () -> data);
-//    }
-
-//    public static <R> WrapperAbstract<R> wrap(R data) {
-//        List<R> list = new ArrayList<>();
-//        list.add(data);
-////        return wrap(() -> new ArrayList<>(){{add(data);}});
-//        return wrap(list);
-//    }
-
-//    public static <R> WrapperAbstract<R> wrap() {
-//        return wrap(WrapperAbstract::new, ArrayList::new);
-//    }
 
     @Override
     public UUID getUuid() {
         return uuid;
     }
 
-//    public void setUuid(UUID uuid) {
-//        if (uuid == null) return;
-//        this.uuid = uuid;
-//    }
 
     @Override
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
 
-//    public List<T> getContent() {
-//        return content;
-//    }
-
-//    public void setContent(List<T> content) {
-//        this.content = content;
-//    }
-
-//    public void setContent(T content) {
-//        List<T> list = new ArrayList<>();
-//        list.add(content);
-//        this.content = list;
-//    }
 
     @Override
     public Map<String, Object> getTechInfo() {
         return techInfo;
     }
-
-//    public void addTechInfo(String key, Object val) {
-//        if (CommonNames.WrapperNames.FIELD_NAME_UUID.equals(key)) return;
-//        if (CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP.equals(key)) return;
-//        if (CommonNames.WrapperNames.FIELD_NAME_CONTENT.equals(key)) return;
-//        if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return;
-//        if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return;
-//        this.techInfo.put(key, val);
-//    }
-
-//    public Long getContentSize() {
-//        return contentSize;
-//    }
 
     @Override
     public WrapperType getType() {
@@ -157,11 +85,11 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 //            return null;
 //        }
         public B addTechInfo(String key, Object val) {
-            if (CommonNames.WrapperNames.FIELD_NAME_UUID.equals(key)) return _this();
-            if (CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP.equals(key)) return _this();
-            if (CommonNames.WrapperNames.FIELD_NAME_CONTENT.equals(key)) return _this();
-            if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return _this();
-            if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return _this();
+//            if (CommonNames.WrapperNames.FIELD_NAME_UUID.equals(key)) return _this();
+//            if (CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP.equals(key)) return _this();
+//            if (CommonNames.WrapperNames.FIELD_NAME_CONTENT.equals(key)) return _this();
+//            if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return _this();
+//            if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return _this();
             if (key == null) return _this();
 
             _this().techInfo.put(key, val);
@@ -171,24 +99,14 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
         public B addTechInfo(Map<String, ?> parameters) {
             if (parameters == null) return _this();
             _this().techInfo.putAll(parameters);
+//            _this().techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_UUID)
 
             return _this();
         }
 
-//        @Override
-//        public B setType(WrapperType type) {
-//            _this().type = type;
-//            return _this();
-//        }
-//
-////        @Override
-////        public B setType(String type) {
-////
-////            return _this();
-////        }
-
         @Override
         public B setUUID(UUID uuid) {
+            if (uuid == null) return _this();
             _this().uuid = uuid;
             return _this();
         }
@@ -213,13 +131,24 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 
             objectInstance.uuid = _this().uuid;
             objectInstance.timestamp = _this().timestamp;
-            objectInstance.techInfo.putAll(_this().techInfo);
+            objectInstance.techInfo = new HashMap<>();
+            objectInstance.techInfo.putAll(_this().filteredTechInfo());
 //            objectInstance.type = _this().type;
 
             objectInstance.type = WrapperType.EMPTY;
 
 
             return objectInstance;
+        }
+
+        protected Map<String, Object> filteredTechInfo() {
+            this.techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_UUID);
+            this.techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_TIMESTAMP);
+            this.techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_CONTENT);
+            this.techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE);
+            this.techInfo.remove(CommonNames.WrapperNames.FIELD_NAME_TECH_INFO);
+
+            return this.techInfo;
         }
     }
 }

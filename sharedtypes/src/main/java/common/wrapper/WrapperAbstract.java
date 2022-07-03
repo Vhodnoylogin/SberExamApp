@@ -3,10 +3,9 @@ package common.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import common.builder.Builder;
+import common.help.CommonNames;
+import common.help.MyTimestamp;
 import common.wrapper.types.WrapperType;
-import help.CommonNames;
-import help.MyTimestamp;
-import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -163,8 +162,16 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
             if (CommonNames.WrapperNames.FIELD_NAME_CONTENT.equals(key)) return _this();
             if (CommonNames.WrapperNames.FIELD_NAME_CONTENT_SIZE.equals(key)) return _this();
             if (CommonNames.WrapperNames.FIELD_NAME_TECH_INFO.equals(key)) return _this();
+            if (key == null) return _this();
 
             _this().techInfo.put(key, val);
+            return _this();
+        }
+
+        public B addTechInfo(Map<String, ?> parameters) {
+            if (parameters == null) return _this();
+            _this().techInfo.putAll(parameters);
+
             return _this();
         }
 
@@ -181,19 +188,21 @@ public abstract class WrapperAbstract<T> implements IWrapper<T> {
 ////        }
 
         @Override
-        public B setUUID(@NonNull UUID uuid) {
+        public B setUUID(UUID uuid) {
             _this().uuid = uuid;
             return _this();
         }
 
         @Override
-        public B setTimestamp(@NonNull LocalDateTime timestamp) {
+        public B setTimestamp(LocalDateTime timestamp) {
+            if (timestamp == null) return _this();
             _this().timestamp = timestamp;
             return _this();
         }
 
         @Override
-        public B setTimestamp(@NonNull String timestamp) {
+        public B setTimestamp(String timestamp) {
+            if (timestamp == null) return _this();
             _this().timestamp = MyTimestamp.parse(timestamp);
             return _this();
         }

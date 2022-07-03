@@ -2,8 +2,8 @@ package common.wrapper;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import common.help.CommonNames;
 import common.wrapper.types.WrapperType;
-import help.CommonNames;
 import org.springframework.lang.NonNull;
 
 import java.util.ArrayList;
@@ -190,6 +190,10 @@ public class Wrapper<T> extends WrapperAbstract<T> implements IWrapper<T> {
         }
     }
 
+    public static <T> WrapperBuilder<T> builder() {
+        return new WrapperBuilder<>();
+    }
+
     public static class WrapperBuilder<T> extends WrapperBuilderPrep<T, Wrapper<T>, WrapperBuilder<T>> {
         @Override
         protected Wrapper<T> _new() {
@@ -197,7 +201,7 @@ public class Wrapper<T> extends WrapperAbstract<T> implements IWrapper<T> {
         }
 
         @Override
-        protected WrapperBuilder<T> _this() {
+        public WrapperBuilder<T> _this() {
             return this;
         }
     }

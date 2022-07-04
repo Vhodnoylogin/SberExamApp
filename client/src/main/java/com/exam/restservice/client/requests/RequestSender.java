@@ -10,10 +10,10 @@ import java.util.UUID;
 import java.util.function.Function;
 
 public class RequestSender<T> {
-    protected Function<Map<String, Object>, ResponseEntity<T>> func;
+    protected Function<Map<String, ?>, ResponseEntity<T>> func;
 
 
-    public RequestSender(Function<Map<String, Object>, ResponseEntity<T>> func) {
+    public RequestSender(Function<Map<String, ?>, ResponseEntity<T>> func) {
         this.func = func;
     }
 

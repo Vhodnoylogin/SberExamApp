@@ -11,6 +11,7 @@ import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import common.models.Airport;
 import common.wrapper.Wrapper;
+import common.wrapper.types.WrapperType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
@@ -19,7 +20,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -32,15 +36,16 @@ public class TaskAirports {
 
 
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
-//        Logger logger = LogManager.getLogger(TaskAirports.class);
-
         Map<String, Object> params = Map.of(
                 CommonNames.ParamsNames.PARAM_ID, id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
         ResponseEntity<String> response = req.get(params);
-        if (response.getStatusCode() != HttpStatus.OK) return false;
+        logger.debug(response + " " + response.getStatusCode());
+
+        if (response.getStatusCode() != HttpStatus.OK) logger.info("GOOD DAY!");
         String res = response.getBody();
+        logger.debug(res);
 
         Gson gson = new GsonBuilder().registerTypeAdapter(
                 LocalDateTime.class
@@ -48,40 +53,49 @@ public class TaskAirports {
         ).create();
         Wrapper<Airport> object = gson.fromJson(res, new TypeToken<Wrapper<Airport>>() {
         }.getType());
+        logger.debug(object);
         if (object == null) return false;
+
+        if (object.getType() == WrapperType.ERROR) {
+            logger.error(object);
+            logger.error(object.getErrorMessage());
+            return false;
+        }
+
         Wrapper<String> reqMsg = gson.fromJson(
                 gson.toJson(
                         object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
                 ), new TypeToken<Wrapper<String>>() {
                 }.getType()
         );
-
-
-        String thread = object.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
+        logger.debug(reqMsg);
 
         Map<String, Object> techInfo = reqMsg.getTechInfo();
 
 
+        String thread = techInfo.getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
         UUID reqUUID = reqMsg.getUuid();
         UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
         LocalDateTime respTime = object.getTimestamp();
         LocalDateTime reqTime = reqMsg.getTimestamp();
         LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
 
-
+        logger.debug("Objects.equals(reqUUID, reqCliUUID)" + " " + Objects.equals(reqUUID, reqCliUUID));
+        logger.debug("Objects.equals(reqTime, reqCliTime)" + " " + Objects.equals(reqTime, reqCliTime));
+        logger.debug("Objects.equals(thread, Thread.currentThread().getName()" + " " + Objects.equals(thread, Thread.currentThread().getName()));
+        logger.debug("object.getContentSize() > 0" + " " + (object.getContentSize() > 0));
         boolean flag = Objects.equals(reqUUID, reqCliUUID)
                 && Objects.equals(reqTime, reqCliTime)
                 && Objects.equals(thread, Thread.currentThread().getName())
                 && object.getContentSize() > 0;
         if (flag) object.getContent().forEach(logger::info);
-        logger.info(Duration.between(reqTime, respTime).getSeconds());
+        logger.debug("Duration.between request and response = " + Duration.between(reqTime, respTime).getSeconds());
         return flag;
     }
 
     public static void runAirports() {
         final long startTime = System.currentTimeMillis();
-        RequestSenderBuilder reqBuilder = new RequestSenderBuilder();
-        RequestSender<String> req = reqBuilder.build(
+        RequestSender<String> req = new RequestSenderBuilder().build(
                 new ParameterizedTypeReference<>() {
                 }, BasicUrlPrepared.preparedURL(
                         URL_WORK
@@ -90,7 +104,8 @@ public class TaskAirports {
                 )
         );
 
-        List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L);
+//        List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L, 170000L);
+        List<Long> listId = List.of(170000L);
 //        List<Long> listId = Arrays.asList(1L, 3L);
 
         ExecutorService pool = Executors.newFixedThreadPool(2);
@@ -124,6 +139,6 @@ public class TaskAirports {
         pool.shutdown();
 
         final long endTime = System.currentTimeMillis();
-        logger.info("Total execution time: " + (endTime - startTime) / 1000);
+        logger.info("Total execution time: " + ((endTime - startTime) / 1000));
     }
 }

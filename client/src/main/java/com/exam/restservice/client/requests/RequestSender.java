@@ -34,7 +34,8 @@ public class RequestSender<T> {
                 , CommonNames.ParamsNames.PARAM_TIMESTAMP, LocalDateTime.now()
         ));
         return restTemplate.exchange(
-                this.url
+//                this.url
+                BasicUrlPrepared.preparedURL(this.url, paramss)
                 , HttpMethod.GET
                 , this.entity
                 , this.type

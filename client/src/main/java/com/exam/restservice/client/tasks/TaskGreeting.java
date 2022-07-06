@@ -1,6 +1,5 @@
 package com.exam.restservice.client.tasks;
 
-import com.exam.restservice.client.requests.BasicUrlPrepared;
 import com.exam.restservice.client.requests.RequestSender;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -17,17 +16,21 @@ import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 public class TaskGreeting {
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
         Logger logger = LogManager.getLogger(TaskGreeting.class);
 
         Map<String, Object> params = Map.of(
-                CommonNames.ParamsNames.PARAM_ID, id
+                "QQL", id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
         ResponseEntity<String> response = req.get(params);
@@ -74,21 +77,16 @@ public class TaskGreeting {
 
     public static void testClient() {
         RequestSender<String> req = RequestSender.<String>builder()
-                .setUrl(BasicUrlPrepared.preparedURL(
-                        CommonNames.URLStorage.URL_GREETING
-                        , CommonNames.ParamsNames.PARAM_ID
-                        , CommonNames.ParamsNames.PARAM_THREAD_NAME
-                ))
+                .setUrl(CommonNames.URLStorage.URL_GREETING)
                 .setType(new ParameterizedTypeReference<>() {
                 })
                 .build();
 
-        List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L);
-
+        int n = 10;
         ExecutorService pool = Executors.newFixedThreadPool(2);
-        List<Future<Boolean>> futures = listId.stream()
-                .map((x) ->
-                        (Callable<Boolean>) () -> runningPart(req, x, Thread.currentThread().getName())
+        List<Future<Boolean>> futures = LongStream.rangeClosed(1, n).boxed()
+                .map(
+                        (x) -> (Callable<Boolean>) () -> runningPart(req, x, Thread.currentThread().getName())
                 )
                 .map(pool::submit)
                 .collect(Collectors.toList());

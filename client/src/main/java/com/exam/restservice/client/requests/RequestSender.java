@@ -3,6 +3,7 @@ package com.exam.restservice.client.requests;
 import common.builder.Builder;
 import common.constant.CommonNames;
 import common.fluentinterface.FluentInterface;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +12,10 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 public class RequestSender<T> {
-    protected static final RestTemplate restTemplate = new RestTemplate();
+//    protected static final RestTemplate restTemplate = new RestTemplate();
+    protected static final RestTemplate restTemplate = new RestTemplateBuilder()
+            .errorHandler(new RestTemplateResponseErrorHandler())
+            .build();
 
     //    protected Function<Map<String, ?>, ResponseEntity<T>> func;
     protected String url;
@@ -44,10 +48,9 @@ public class RequestSender<T> {
     }
 
     public ResponseEntity<T> get(String key, Object value) {
-        Map<String, ?> params = new HashMap<>() {{
+        return get(new HashMap<>() {{
             put(key, value);
-        }};
-        return get(params);
+        }});
     }
 
     public abstract static class RequestSenderBuilderAbstract<T, C extends RequestSender<T>, B extends RequestSenderBuilderAbstract<T, C, B>>

@@ -2,7 +2,6 @@ package com.exam.restservice.client.tasks;
 
 import com.exam.restservice.client.requests.BasicUrlPrepared;
 import com.exam.restservice.client.requests.RequestSender;
-import com.exam.restservice.client.requests.RequestSenderBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -40,8 +39,13 @@ public class TaskAirports {
                 CommonNames.ParamsNames.PARAM_ID, id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
-        ResponseEntity<String> response = req.get(params);
-        logger.debug(response + " " + response.getStatusCode());
+        ResponseEntity<String> response = null;
+        try {
+            response = req.get(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        logger.debug(response.getStatusCode());
 
         if (response.getStatusCode() != HttpStatus.OK) logger.info("GOOD DAY!");
         String res = response.getBody();
@@ -95,14 +99,16 @@ public class TaskAirports {
 
     public static void runAirports() {
         final long startTime = System.currentTimeMillis();
-        RequestSender<String> req = new RequestSenderBuilder().build(
-                new ParameterizedTypeReference<>() {
-                }, BasicUrlPrepared.preparedURL(
+
+        RequestSender<String> req = RequestSender.<String>builder()
+                .setUrl(BasicUrlPrepared.preparedURL(
                         URL_WORK
                         , CommonNames.ParamsNames.PARAM_ID
                         , CommonNames.ParamsNames.PARAM_THREAD_NAME
-                )
-        );
+                ))
+                .setType(new ParameterizedTypeReference<>() {
+                })
+                .build();
 
 //        List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L, 170000L);
         List<Long> listId = List.of(170000L);

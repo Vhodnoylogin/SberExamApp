@@ -2,7 +2,6 @@ package com.exam.restservice.client.tasks;
 
 import com.exam.restservice.client.requests.BasicUrlPrepared;
 import com.exam.restservice.client.requests.RequestSender;
-import com.exam.restservice.client.requests.RequestSenderBuilder;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -24,7 +23,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class TaskGreeting {
-
     protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
         Logger logger = LogManager.getLogger(TaskGreeting.class);
 
@@ -75,9 +73,15 @@ public class TaskGreeting {
     }
 
     public static void testClient() {
-        RequestSenderBuilder reqBuilder = new RequestSenderBuilder();
-        RequestSender<String> req = reqBuilder.build(new ParameterizedTypeReference<>() {
-        }, BasicUrlPrepared.preparedURL(CommonNames.URLStorage.URL_GREETING, CommonNames.ParamsNames.PARAM_ID, CommonNames.ParamsNames.PARAM_THREAD_NAME));
+        RequestSender<String> req = RequestSender.<String>builder()
+                .setUrl(BasicUrlPrepared.preparedURL(
+                        CommonNames.URLStorage.URL_GREETING
+                        , CommonNames.ParamsNames.PARAM_ID
+                        , CommonNames.ParamsNames.PARAM_THREAD_NAME
+                ))
+                .setType(new ParameterizedTypeReference<>() {
+                })
+                .build();
 
         List<Long> listId = Arrays.asList(1L, 3L, 7L, 12L, 17L, 170L);
 

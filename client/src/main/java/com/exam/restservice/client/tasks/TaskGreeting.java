@@ -1,9 +1,7 @@
 package com.exam.restservice.client.tasks;
 
+import com.exam.restservice.client.requests.GsonParser;
 import com.exam.restservice.client.requests.RequestSender;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.reflect.TypeToken;
 import common.constant.CommonNames;
 import common.help.MyTimestamp;
@@ -33,48 +31,58 @@ public class TaskGreeting {
                 "QQL", id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
-        ResponseEntity<String> response = req.get(params);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            String res = response.getBody();
-            logger.info(res);
-//            System.out.println(res);
-
-            Gson gson = new GsonBuilder().registerTypeAdapter(
-                    LocalDateTime.class
-                    , (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) -> MyTimestamp.parse(json.getAsString())
-            ).create();
-            Wrapper<Void> greeting = gson.fromJson(res, new TypeToken<Wrapper<Void>>() {
-            }.getType());
-            logger.info(greeting);
-            if (greeting != null) {
-                Wrapper<String> reqMsg = gson.fromJson(
-                        gson.toJson(
-                                greeting.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
-                        ), new TypeToken<Wrapper<String>>() {
-                        }.getType()
-                );
-
-                String thread = greeting.getTechInfo().getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
-
-                Map<String, Object> techInfo = reqMsg.getTechInfo();
-
-                UUID reqUUID = reqMsg.getUuid();
-                UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
-                LocalDateTime respTime = greeting.getTimestamp();
-                LocalDateTime reqTime = reqMsg.getTimestamp();
-                LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
-
-//                System.out.println(Duration.between(reqTime, respTime).toString());
-                logger.info(Duration.between(reqTime, respTime).toString());
-                return Objects.equals(reqUUID, reqCliUUID)
-                        && Objects.equals(reqTime, reqCliTime)
-                        && Objects.equals(thread, Thread.currentThread().getName());
-
-            }
+        ResponseEntity<String> response;
+        try {
+            response = req.get(params);
+        } catch (Exception e) {
+            logger.error("Exception on getting response");
+            logger.error(e);
+            return false;
         }
-        return false;
-    }
+        if (response.getStatusCode() != HttpStatus.OK) {
+            logger.info(response.getStatusCode());
+            return false;
+        }
+        String res = response.getBody();
+        logger.info(res);
+        Wrapper<Void> object = GsonParser.parser().fromJson(res, new TypeToken<Wrapper<Void>>() {
+        }.getType());
+        if (object == null) {
+            logger.error("INCORRECT OBJECT: " + res);
+            return false;
+        }
+        logger.debug(object);
 
+        Wrapper<String> requestObject = GsonParser.parser().fromJson(
+                GsonParser.parser().toJson(
+                        object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
+                ), new TypeToken<Wrapper<String>>() {
+                }.getType()
+        );
+        logger.debug(requestObject);
+
+        Map<String, Object> techInfo = requestObject.getTechInfo();
+
+        String thread = techInfo.getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
+        UUID reqUUID = requestObject.getUuid();
+        UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
+        LocalDateTime respTime = object.getTimestamp();
+        LocalDateTime reqTime = requestObject.getTimestamp();
+        LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
+
+        logger.debug("Objects.equals(reqUUID, reqCliUUID)" + " " + Objects.equals(reqUUID, reqCliUUID));
+        logger.debug("Objects.equals(reqTime, reqCliTime)" + " " + Objects.equals(reqTime, reqCliTime));
+        logger.debug("Objects.equals(thread, Thread.currentThread().getName()" + " " + Objects.equals(thread, Thread.currentThread().getName()));
+        logger.debug("object.getContentSize() > 0" + " " + (object.getContentSize() > 0));
+        boolean flag = Objects.equals(reqUUID, reqCliUUID)
+                && Objects.equals(reqTime, reqCliTime)
+                && Objects.equals(thread, Thread.currentThread().getName())
+                && object.getContentSize() > 0;
+        if (flag) object.getContent().forEach(logger::info);
+        logger.debug("Duration.between request and response = " + Duration.between(reqTime, respTime).getSeconds());
+        return flag;
+
+    }
     public static void testClient() {
         RequestSender<String> req = RequestSender.<String>builder()
                 .setUrl(CommonNames.URLStorage.URL_GREETING)

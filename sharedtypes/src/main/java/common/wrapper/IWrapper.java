@@ -2,8 +2,8 @@ package common.wrapper;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import common.builder.IBuilder;
-import common.fluentinterface.FluentInterface;
 import common.constant.CommonNames;
+import common.fluentinterface.FluentInterface;
 import common.wrapper.types.WrapperType;
 
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public interface IWrapper<T> {
 
 
     @JsonGetter(CommonNames.ErrorNames.FIELD_NAME_ERROR)
-    Exception getError();
+    Class<? extends Exception> getError();
 
     @JsonGetter(CommonNames.ErrorNames.FIELD_NAME_ERROR_MESSAGE)
     String getErrorMessage();
@@ -65,8 +65,10 @@ public interface IWrapper<T> {
         B setContent(List<D> content);
     }
 
-    interface WrapperBuilderError<E extends Exception, T, B extends WrapperBuilderError<E, T, B>> extends FluentInterface<B> {
-        B setException(E content);
+    interface WrapperBuilderError<E extends Exception, C extends Class<? extends E>, T, B extends WrapperBuilderError<E, C, T, B>> extends FluentInterface<B> {
+        B setException(E exception);
+
+        B setException(Class<? extends E> classException);
 
         B setErrorMessage(String msg);
     }
@@ -86,6 +88,6 @@ public interface IWrapper<T> {
 
     interface IWrapperBuilder<I, T, B extends IWrapperBuilder<I, T, B>>
             extends IBuilder<T, B>, WrapperBuilderUUID<B>, WrapperBuilderTimestamp<B>, WrapperBuilderTechInfo<B>
-            , WrapperBuilderType<B>, WrapperBuilderContent<I, T, B>, WrapperBuilderError<Exception, T, B> {
+            , WrapperBuilderType<B>, WrapperBuilderContent<I, T, B>, WrapperBuilderError<Exception, Class<? extends Exception>, T, B> {
     }
 }

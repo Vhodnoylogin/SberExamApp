@@ -1,91 +1,66 @@
 package com.exam.restservice.client.tasks;
 
-import com.exam.restservice.client.requests.GsonParser;
 import com.exam.restservice.client.requests.RequestSender;
+import com.exam.restservice.client.types.Request;
+import com.exam.restservice.client.types.Response;
 import com.google.gson.reflect.TypeToken;
 import common.constant.CommonNames;
-import common.help.MyTimestamp;
-import common.wrapper.Wrapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
 public class TaskGreeting {
-    protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
-        Logger logger = LogManager.getLogger(TaskGreeting.class);
+    protected static Logger logger = LogManager.getLogger(TaskGreeting.class);
+    protected static String URL_WORK = CommonNames.URLStorage.URL_GREETING;
 
+    protected static boolean runningPart(RequestSender<String> req, Long id, String threadName) {
         Map<String, Object> params = Map.of(
                 "QQL", id
                 , CommonNames.ParamsNames.PARAM_THREAD_NAME, threadName
         );
-        ResponseEntity<String> response;
+        Response<Void> responseObject;
         try {
-            response = req.get(params);
+            responseObject = CommonProcess.preProcess(req, new TypeToken<>() {
+            }, params, logger);
         } catch (Exception e) {
-            logger.error("Exception on getting response");
             logger.error(e);
             return false;
         }
-        if (response.getStatusCode() != HttpStatus.OK) {
-            logger.info(response.getStatusCode());
+
+        Request requestObject;
+        try {
+            requestObject = responseObject.getRequest();
+        } catch (Exception e) {
+            logger.error(e);
             return false;
         }
-        String res = response.getBody();
-        logger.info(res);
-        Wrapper<Void> object = GsonParser.parser().fromJson(res, new TypeToken<Wrapper<Void>>() {
-        }.getType());
-        if (object == null) {
-            logger.error("INCORRECT OBJECT: " + res);
-            return false;
-        }
-        logger.debug(object);
+        logger.debug("Requesting object: " + requestObject);
 
-        Wrapper<String> requestObject = GsonParser.parser().fromJson(
-                GsonParser.parser().toJson(
-                        object.getTechInfo().get(CommonNames.ParamsNames.PARAM_REQUEST)
-                ), new TypeToken<Wrapper<String>>() {
-                }.getType()
-        );
-        logger.debug(requestObject);
+        boolean flag = CommonProcess.processRequest(requestObject, logger);
 
-        Map<String, Object> techInfo = requestObject.getTechInfo();
+        logger.debug("response.getContentSize() > 0: " + " " + (responseObject.getContentSize() > 0));
+        flag &= responseObject.getContentSize() > 0;
+        if (flag) responseObject.getContent().forEach(logger::info);
 
-        String thread = techInfo.getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "QQL").toString();
-        UUID reqUUID = requestObject.getUuid();
-        UUID reqCliUUID = UUID.fromString(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_UUID).toString());
-        LocalDateTime respTime = object.getTimestamp();
+        LocalDateTime respTime = responseObject.getTimestamp();
         LocalDateTime reqTime = requestObject.getTimestamp();
-        LocalDateTime reqCliTime = MyTimestamp.parse(techInfo.get(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP).toString());
-
-        logger.debug("Objects.equals(reqUUID, reqCliUUID)" + " " + Objects.equals(reqUUID, reqCliUUID));
-        logger.debug("Objects.equals(reqTime, reqCliTime)" + " " + Objects.equals(reqTime, reqCliTime));
-        logger.debug("Objects.equals(thread, Thread.currentThread().getName()" + " " + Objects.equals(thread, Thread.currentThread().getName()));
-        logger.debug("object.getContentSize() > 0" + " " + (object.getContentSize() > 0));
-        boolean flag = Objects.equals(reqUUID, reqCliUUID)
-                && Objects.equals(reqTime, reqCliTime)
-                && Objects.equals(thread, Thread.currentThread().getName())
-                && object.getContentSize() > 0;
-        if (flag) object.getContent().forEach(logger::info);
         logger.debug("Duration.between request and response = " + Duration.between(reqTime, respTime).getSeconds());
+
         return flag;
 
     }
     public static void testClient() {
         RequestSender<String> req = RequestSender.<String>builder()
-                .setUrl(CommonNames.URLStorage.URL_GREETING)
+                .setUrl(URL_WORK)
                 .setType(new ParameterizedTypeReference<>() {
                 })
                 .build();

@@ -5,13 +5,13 @@ import com.exam.restservice.client.requests.RequestSender;
 import com.exam.restservice.client.types.IncorrectResponse;
 import com.exam.restservice.client.types.Request;
 import com.exam.restservice.client.types.Response;
-import com.google.gson.reflect.TypeToken;
 import common.constant.CommonNames;
 import common.help.MyTimestamp;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
@@ -19,7 +19,7 @@ import java.util.UUID;
 
 public class CommonProcess {
 
-    public static <T> Response<T> preProcess(RequestSender<String> req, TypeToken<T> tt, Map<String, ?> params, Logger logger) {
+    public static <T> Response<T> preProcess(RequestSender<String> req, Type type, Map<String, ?> params, Logger logger) {
         ResponseEntity<String> response;
         try {
             response = req.get(params);
@@ -28,19 +28,22 @@ public class CommonProcess {
 //            logger.error(e);
             throw new IncorrectResponse("Exception on getting response", e);
         }
-        if (Objects.equals(response.getStatusCode(), HttpStatus.OK)) {
-            logger.info("Incorrect status code: " + response.getStatusCode());
+
+//        logger.debug(response.getStatusCode() + " " + HttpStatus.OK + " " + Objects.equals(response.getStatusCode(), HttpStatus.OK));
+        if (!Objects.equals(response.getStatusCode(), HttpStatus.OK)) {
+//            logger.info("Incorrect status code: " + response.getStatusCode());
             throw new IncorrectResponse("Incorrect status code: " + response.getStatusCode(), response.getBody());
         }
 
         Response<T> object;
         try {
-            object = GsonParser.parser().fromJson(response.getBody(), tt.getType());
+            logger.debug(response.getBody());
+            object = GsonParser.parser().fromJson(response.getBody(), type);
             if (object == null) {
-                throw new IncorrectResponse("Incorrect status code: " + response.getStatusCode(), response.getBody());
+                throw new IncorrectResponse("Error on parsing object", response.getBody());
             }
         } catch (Exception e) {
-            logger.error("Exception on parsing json: " + e.getLocalizedMessage());
+//            logger.error("Exception on parsing json: " + e.getLocalizedMessage());
             throw new IncorrectResponse(
                     "Exception on parsing json: " + e.getLocalizedMessage()
                     , response.getBody()
@@ -68,4 +71,5 @@ public class CommonProcess {
                 && Objects.equals(reqTime, reqCliTime)
                 && Objects.equals(thread, Thread.currentThread().getName());
     }
+
 }

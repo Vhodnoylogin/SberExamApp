@@ -26,8 +26,8 @@ public class RequestSender<T> {
     protected RequestSender() {
     }
 
-    public static <T> RequestSenderBuilder<T> builder() {
-        return new RequestSenderBuilder<>();
+    public static <T> RequestSenderBuilderFinal<T> builderRequestSender() {
+        return new RequestSenderBuilderFinal<>();
     }
 
     public ResponseEntity<T> get(Map<String, ?> params) {
@@ -53,7 +53,7 @@ public class RequestSender<T> {
         }});
     }
 
-    public abstract static class RequestSenderBuilderAbstract<T, C extends RequestSender<T>, B extends RequestSenderBuilderAbstract<T, C, B>>
+    public abstract static class RequestSenderBuilder<T, C extends RequestSender<T>, B extends RequestSenderBuilder<T, C, B>>
             extends Builder<C, B> implements FluentInterface<B> {
         protected String url;
         protected List<MediaType> acceptTypes;
@@ -136,14 +136,14 @@ public class RequestSender<T> {
         }
     }
 
-    public static class RequestSenderBuilder<T> extends RequestSenderBuilderAbstract<T, RequestSender<T>, RequestSenderBuilder<T>> {
+    public static class RequestSenderBuilderFinal<T> extends RequestSenderBuilder<T, RequestSender<T>, RequestSenderBuilderFinal<T>> {
         @Override
         protected RequestSender<T> _new() {
             return new RequestSender<>();
         }
 
         @Override
-        public RequestSenderBuilder<T> _this() {
+        public RequestSenderBuilderFinal<T> _this() {
             return this;
         }
     }

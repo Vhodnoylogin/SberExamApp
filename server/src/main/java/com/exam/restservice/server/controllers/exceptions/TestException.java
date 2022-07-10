@@ -19,13 +19,6 @@ public class TestException {
         throw new RecordNotFoundException("RecordNotFoundException");
     }
 
-//    @ExceptionHandler
-//    public ResponseEntity<String> handleExceptions(Exception e){
-//        return ResponseEntity
-//                .status(HttpStatus.NOT_FOUND)
-//                .body(e.getMessage());
-//    }
-
     @ExceptionHandler(RecordNotFoundException.class)
     public ResponseEntity<Exception> handleExceptionRecordNotFoundException(Exception e) {
         return ResponseEntity

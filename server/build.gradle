@@ -1,6 +1,4 @@
-plugins {
-    id 'java'
-}
+apply plugin: "java"
 
 dependencies {
     implementation project(':sharedtypes')
@@ -16,5 +14,17 @@ bootJar {
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+buildscript {
+    ext {
+        springBootVersion = '2.7.0'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }

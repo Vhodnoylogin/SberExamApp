@@ -7,6 +7,5 @@ public class RestAppClient {
     public static void main(String[] args) {
 //        TaskGreeting.testClient();
         TaskAirports.runAirports();
-
     }
 }

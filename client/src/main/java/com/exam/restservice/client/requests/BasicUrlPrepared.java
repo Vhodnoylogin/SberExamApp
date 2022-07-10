@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class BasicUrlPrepared {
-    protected static final String URL_HOST = "http://localhost:8080";
+    public static final String URL_HOST = "http://localhost:8080";
 
     protected static UriComponentsBuilder commonUrlPrepared(String url) {
         return UriComponentsBuilder.fromHttpUrl(url)

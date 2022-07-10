@@ -4,9 +4,10 @@ plugins {
     id 'java'
 }
 
+//rootProject.name = 'rest=service-g'
 group = 'com.exam'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '16'
 
 
 def javaProjects = [

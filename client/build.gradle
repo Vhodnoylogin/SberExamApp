@@ -1,14 +1,16 @@
 apply plugin: "java"
 dependencies {
     implementation project(':sharedtypes')
-
 }
 
 repositories { mavenCentral() }
 
-bootJar {
+jar {
     manifest {
-        attributes "Main-Class": "com.exam.restservice.client.RestAppClient"
+        attributes(
+//            "Class-Path": configurations.compile.collect { it.getName() }.join(' '),
+                "Main-Class": "com.exam.restservice.client.RestAppClient"
+        )
     }
 
     from {

@@ -1,6 +1,8 @@
 package com.exam.restservice.client.tasks;
 
 import com.exam.restservice.client.requests.RequestSender;
+import com.exam.restservice.client.tasks.help.CommonProcess;
+import com.exam.restservice.client.tasks.help.RunThreads;
 import com.exam.restservice.client.types.Request;
 import com.exam.restservice.client.types.Response;
 import com.google.gson.reflect.TypeToken;
@@ -10,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,14 +21,14 @@ public class TaskGreeting {
     protected static String URL_WORK = CommonNames.URLStorage.URL_GREETING;
 
     protected static boolean runningPart(RequestSender<String> req, Map<String, ?> params) {
-//        Map<String, Object> params = Map.of(
-//                "QQL", id
-//                , CommonNames.ParamsNames.PARAM_THREAD_NAME, Thread.currentThread().getName()
-//        );
+        Map<String, Object> paramss = new HashMap<>() {{
+            putAll(params);
+            put(CommonNames.ParamsNames.PARAM_THREAD_NAME, Thread.currentThread().getName());
+        }};
         Response<Void> responseObject;
         try {
             responseObject = CommonProcess.preProcess(req, new TypeToken<Response<Void>>() {
-            }.getType(), params, logger);
+            }.getType(), paramss, logger);
         } catch (Exception e) {
             logger.error(e);
             return false;
@@ -42,9 +45,9 @@ public class TaskGreeting {
 
         boolean flag = CommonProcess.processRequest(requestObject, logger);
 
-        logger.debug("response.getContentSize() > 0: " + " " + (responseObject.getContentSize() > 0));
-        flag &= responseObject.getContentSize() > 0;
-        if (flag) responseObject.getContent().forEach(logger::info);
+//        logger.debug("response.getContentSize() > 0: " + " " + (responseObject.getContentSize() > 0));
+//        flag &= responseObject.getContentSize() > 0;
+//        if (flag) responseObject.getContent().forEach(logger::info);
 
         LocalDateTime respTime = responseObject.getTimestamp();
         LocalDateTime reqTime = requestObject.getTimestamp();
@@ -57,7 +60,7 @@ public class TaskGreeting {
         RunThreads.run(
                 logger
                 , URL_WORK
-                , null
+                , new HashMap<>()
                 , TaskGreeting::runningPart
                 , CommonNames.ParamsNames.PARAM_ID
                 , List.of(1, 2, 3)

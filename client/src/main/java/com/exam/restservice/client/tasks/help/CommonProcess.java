@@ -1,4 +1,4 @@
-package com.exam.restservice.client.tasks;
+package com.exam.restservice.client.tasks.help;
 
 import com.exam.restservice.client.requests.GsonParser;
 import com.exam.restservice.client.requests.RequestSender;
@@ -7,6 +7,7 @@ import com.exam.restservice.client.types.Request;
 import com.exam.restservice.client.types.Response;
 import common.constant.CommonNames;
 import common.help.MyTimestamp;
+import common.wrapper.types.WrapperType;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,10 @@ public class CommonProcess {
         }
         logger.debug("Response object: " + object);
 
+        if (object.getType() != WrapperType.CONTENT) {
+            throw new IncorrectResponse("Error in content");
+        }
+
         return object;
     }
 
@@ -67,6 +72,7 @@ public class CommonProcess {
         logger.debug("Objects.equals(reqUUID, reqCliUUID)" + " " + Objects.equals(reqUUID, reqCliUUID));
         logger.debug("Objects.equals(reqTime, reqCliTime)" + " " + Objects.equals(reqTime, reqCliTime));
         logger.debug("Objects.equals(thread, Thread.currentThread().getName()" + " " + Objects.equals(thread, Thread.currentThread().getName()));
+        logger.debug("(thread) = " + thread + "; Thread.currentThread().getName() = " + Thread.currentThread().getName());
         return Objects.equals(reqUUID, reqCliUUID)
                 && Objects.equals(reqTime, reqCliTime)
                 && Objects.equals(thread, Thread.currentThread().getName());

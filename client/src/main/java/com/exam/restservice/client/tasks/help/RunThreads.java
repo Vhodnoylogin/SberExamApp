@@ -1,9 +1,10 @@
-package com.exam.restservice.client.tasks;
+package com.exam.restservice.client.tasks.help;
 
 import com.exam.restservice.client.requests.CostbILRequestSender;
 import com.exam.restservice.client.requests.RequestSender;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -32,7 +33,9 @@ public class RunThreads {
         try {
             int countSucceed = forkJoinPool.submit(
                             () -> iterator.parallelStream()
-                                    .map(x -> Map.of(key, x))
+                                    .map(x -> new HashMap<String, Object>() {{
+                                        put(key, x);
+                                    }})
                                     .peek(x -> x.putAll(constParams))
                                     .map(funnc)
                                     .reduce(

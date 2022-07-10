@@ -19,14 +19,14 @@ public class RunThreads {
             Logger logger
             , String url
             , Map<String, ?> constParams
-            , BiFunction<RequestSender<String>, Map<String, ?>, Boolean> func
+            , BiFunction<RequestSender<String>, Map<String, ?>, Map<String, Boolean>> func
             , String key
             , List<Object> iterator
     ) {
         RequestSender<String> req = CostbILRequestSender.builderCostbILRequestSender()
                 .setUrl(url)
                 .build();
-        Function<Map<String, ?>, Boolean> funnc = (p) -> func.apply(req, p);
+        Function<Map<String, ?>, Map<String, Boolean>> funnc = (p) -> func.apply(req, p);
 
         ForkJoinPool forkJoinPool = new ForkJoinPool(NUM_OF_EXECUTORS);
         try {
@@ -37,7 +37,18 @@ public class RunThreads {
                             }})
                             .peek(x -> x.putAll(constParams))
                             .map(funnc)
-                            .reduce(0, (acc, x) -> acc += (x ? 1 : 0), Integer::sum)
+                            .map(x -> x.entrySet().stream()
+                                    .reduce(
+                                            true
+                                            , (acc, val) -> acc & val.getValue()
+                                            , (v1, v2) -> v1 & v2
+                                    )
+                            )
+                            .reduce(
+                                    0
+                                    , (acc, x) -> acc += (x ? 1 : 0)
+                                    , Integer::sum
+                            )
             ).get();
             logger.info("Success task number = " + countSucceed);
         } catch (InterruptedException | ExecutionException e) {

@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Type;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -60,7 +61,7 @@ public class CommonProcess {
         return object;
     }
 
-    public static boolean processRequest(Request requestObject, Logger logger) {
+    public static Map<String, Boolean> processRequest(Request requestObject, Logger logger) {
         Map<String, Object> techInfo = requestObject.getTechInfo();
 
         String thread = techInfo.getOrDefault(CommonNames.ParamsNames.PARAM_THREAD_NAME, "").toString();
@@ -73,9 +74,12 @@ public class CommonProcess {
         logger.debug("Objects.equals(reqTime, reqCliTime)" + " " + Objects.equals(reqTime, reqCliTime));
         logger.debug("Objects.equals(thread, Thread.currentThread().getName()" + " " + Objects.equals(thread, Thread.currentThread().getName()));
         logger.debug("(thread) = " + thread + "; Thread.currentThread().getName() = " + Thread.currentThread().getName());
-        return Objects.equals(reqUUID, reqCliUUID)
-                && Objects.equals(reqTime, reqCliTime)
-                && Objects.equals(thread, Thread.currentThread().getName());
+
+        return new HashMap<>() {{
+            put(CommonNames.ParamsNames.PARAM_UUID, Objects.equals(reqUUID, reqCliUUID));
+            put(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP, Objects.equals(reqTime, reqCliTime));
+            put(CommonNames.ParamsNames.PARAM_THREAD_NAME, Objects.equals(thread, Thread.currentThread().getName()));
+        }};
     }
 
 }

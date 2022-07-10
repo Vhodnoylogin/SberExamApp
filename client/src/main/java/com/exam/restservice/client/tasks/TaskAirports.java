@@ -15,16 +15,19 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TaskAirports {
 
     protected final static String URL_WORK = CommonNames.URLStorage.URL_AIRPORTS_GET_BY_ID;
     protected static Logger logger = LogManager.getLogger(TaskAirports.class);
 
-    protected static boolean runningPart(RequestSender<String> req, Map<String, ?> params) {
-        Map<String, Object> paramss = new HashMap<>() {{
+    protected static Map<String, Boolean> runningPart(RequestSender<String> req, Map<String, ?> params) {
+        var paramss = new HashMap<String, Object>() {{
             putAll(params);
             put(CommonNames.ParamsNames.PARAM_THREAD_NAME, Thread.currentThread().getName());
+            put(CommonNames.ParamsNames.PARAM_CLIENT_TIMESTAMP, LocalDateTime.now());
+            put(CommonNames.ParamsNames.PARAM_UUID, UUID.randomUUID());
         }};
         Response<Void> responseObject;
         try {
@@ -32,7 +35,9 @@ public class TaskAirports {
             }.getType(), paramss, logger);
         } catch (Exception e) {
             logger.error(e);
-            return false;
+            return new HashMap<>() {{
+                put(CommonNames.ErrorNames.TOTAL_ERROR_NAME, false);
+            }};
         }
 
         Request requestObject;
@@ -40,15 +45,17 @@ public class TaskAirports {
             requestObject = responseObject.getRequest();
         } catch (Exception e) {
             logger.error(e);
-            return false;
+            return new HashMap<>() {{
+                put(CommonNames.ErrorNames.TOTAL_ERROR_NAME, false);
+            }};
         }
         logger.debug("Requesting object: " + requestObject);
 
-        boolean flag = CommonProcess.processRequest(requestObject, logger);
+        var flag = CommonProcess.processRequest(requestObject, logger);
 
         logger.debug("response.getContentSize() > 0: " + " " + (responseObject.getContentSize() > 0));
-        flag &= responseObject.getContentSize() > 0;
-        if (flag) responseObject.getContent().forEach(logger::info);
+        flag.put(CommonNames.WrapperNames.FIELD_NAME_CONTENT, responseObject.getContentSize() > 0);
+        if (responseObject.getContentSize() > 0) responseObject.getContent().forEach(logger::info);
 
         LocalDateTime respTime = responseObject.getTimestamp();
         LocalDateTime reqTime = requestObject.getTimestamp();

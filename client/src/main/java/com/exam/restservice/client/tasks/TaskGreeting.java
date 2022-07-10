@@ -20,7 +20,7 @@ public class TaskGreeting {
     protected static Logger logger = LogManager.getLogger(TaskGreeting.class);
     protected static String URL_WORK = CommonNames.URLStorage.URL_GREETING;
 
-    protected static boolean runningPart(RequestSender<String> req, Map<String, ?> params) {
+    protected static Map<String, Boolean> runningPart(RequestSender<String> req, Map<String, ?> params) {
         Map<String, Object> paramss = new HashMap<>() {{
             putAll(params);
             put(CommonNames.ParamsNames.PARAM_THREAD_NAME, Thread.currentThread().getName());
@@ -31,7 +31,9 @@ public class TaskGreeting {
             }.getType(), paramss, logger);
         } catch (Exception e) {
             logger.error(e);
-            return false;
+            return new HashMap<>() {{
+                put(CommonNames.ErrorNames.TOTAL_ERROR_NAME, false);
+            }};
         }
 
         Request requestObject;
@@ -39,11 +41,13 @@ public class TaskGreeting {
             requestObject = responseObject.getRequest();
         } catch (Exception e) {
             logger.error(e);
-            return false;
+            return new HashMap<>() {{
+                put(CommonNames.ErrorNames.TOTAL_ERROR_NAME, false);
+            }};
         }
         logger.debug("Requesting object: " + requestObject);
 
-        boolean flag = CommonProcess.processRequest(requestObject, logger);
+        var flag = CommonProcess.processRequest(requestObject, logger);
 
 //        logger.debug("response.getContentSize() > 0: " + " " + (responseObject.getContentSize() > 0));
 //        flag &= responseObject.getContentSize() > 0;

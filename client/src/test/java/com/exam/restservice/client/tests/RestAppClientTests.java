@@ -1,4 +1,4 @@
-package com.exam.restserviceg;
+package com.exam.restservice.client.tests;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,9 +11,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 
 @SpringBootTest
-class RestAppServerTests {
-
-    Logger logger = LogManager.getLogger(RestAppServerTests.class);
+class RestAppClientTests {
+    Logger logger = LogManager.getLogger(RestAppClientTests.class);
 
     @Test
     void contextLoads() {

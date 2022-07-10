@@ -2,19 +2,18 @@ package common.constant;
 
 public class CommonNames {
     public static class WrapperNames {
-
         public static final String FIELD_NAME_UUID = "uuid";
         public static final String FIELD_NAME_TIMESTAMP = "timestamp";
         public static final String FIELD_NAME_CONTENT_SIZE = "contentSize";
         public static final String FIELD_NAME_TECH_INFO = "techInfo";
         public static final String FIELD_NAME_CONTENT = "content";
-
         public static final String FIELD_NAME_TYPE = "type";
     }
 
     public static class ErrorNames {
         public static final String FIELD_NAME_ERROR = "error";
         public static final String FIELD_NAME_ERROR_MESSAGE = "errorMessage";
+        public static final String TOTAL_ERROR_NAME = "totalError";
     }
 
     public static class ParamsNames {

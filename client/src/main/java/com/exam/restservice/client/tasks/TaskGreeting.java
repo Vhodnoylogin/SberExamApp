@@ -62,7 +62,7 @@ public class TaskGreeting {
                 , URL_WORK
                 , new HashMap<>()
                 , TaskGreeting::runningPart
-                , CommonNames.ParamsNames.PARAM_ID
+                , "QQL"
                 , List.of(1, 2, 3)
         );
     }

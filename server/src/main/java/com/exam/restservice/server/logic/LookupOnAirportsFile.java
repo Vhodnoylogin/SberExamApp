@@ -1,13 +1,10 @@
-package restserviceg.logic;
+package com.exam.restservice.server.logic;
 
+import com.exam.restservice.server.logic.exceptions.RecordNotFoundException;
 import com.opencsv.bean.CsvToBeanBuilder;
-import common.constant.CommonNames;
 import common.constant.CommonPath;
-import restserviceg.logic.exceptions.RecordNotFoundException;
 import common.models.Airport;
-import org.springframework.core.io.ClassPathResource;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;

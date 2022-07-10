@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
     <configuration default="false" name="RestAppServer" type="Application" factoryName="Application"
                    nameIsGenerated="true">
-        <option name="MAIN_CLASS_NAME" value="restserviceg.RestAppServer"/>
+        <option name="MAIN_CLASS_NAME" value="com.exam.restservice.server.RestAppServer"/>
         <module name="rest-service-g.server.main"/>
         <extension name="coverage">
             <pattern>

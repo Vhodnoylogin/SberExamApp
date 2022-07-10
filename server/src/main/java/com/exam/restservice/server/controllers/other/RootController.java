@@ -1,4 +1,4 @@
-package restserviceg.controllers.other;
+package com.exam.restservice.server.controllers.other;
 
 import common.constant.CommonNames;
 import common.models.Greeting;

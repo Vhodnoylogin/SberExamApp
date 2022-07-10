@@ -1,4 +1,4 @@
-package restserviceg.decorator;
+package com.exam.restservice.server.decorator;
 
 import common.constant.CommonNames;
 import common.help.MyTimestamp;

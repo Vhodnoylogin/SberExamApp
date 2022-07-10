@@ -1,13 +1,13 @@
-package restserviceg.controllers.other;
+package com.exam.restservice.server.controllers.other;
 
+import com.exam.restservice.server.decorator.Decorator;
+import com.exam.restservice.server.decorator.NeDecorator;
 import common.constant.CommonNames;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restserviceg.decorator.Decorator;
-import restserviceg.decorator.NeDecorator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

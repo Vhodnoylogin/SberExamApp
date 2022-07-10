@@ -1,4 +1,4 @@
-package restserviceg.controllers.exceptions;
+package com.exam.restservice.server.controllers.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package restserviceg.logic.exceptions;
+package com.exam.restservice.server.logic.exceptions;
 
 public class RecordNotFoundException extends RuntimeException {
     protected Long id;

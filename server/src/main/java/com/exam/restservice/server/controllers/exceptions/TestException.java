@@ -1,11 +1,11 @@
-package restserviceg.controllers.exceptions;
+package com.exam.restservice.server.controllers.exceptions;
 
+import com.exam.restservice.server.logic.exceptions.RecordNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import restserviceg.logic.exceptions.RecordNotFoundException;
 
 @RestController
 public class TestException {
@@ -15,7 +15,7 @@ public class TestException {
     }
 
     @GetMapping("/test/exceptions/RecordNotFoundException")
-    public String testExceptionRecordNotFoundException() throws Exception {
+    public String testExceptionRecordNotFoundException() {
         throw new RecordNotFoundException("RecordNotFoundException");
     }
 

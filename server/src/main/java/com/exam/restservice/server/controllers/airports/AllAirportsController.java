@@ -1,5 +1,9 @@
-package restserviceg.controllers.airports;
+package com.exam.restservice.server.controllers.airports;
 
+import com.exam.restservice.server.decorator.Decorator;
+import com.exam.restservice.server.decorator.NeDecorator;
+import com.exam.restservice.server.logic.LookupOnAirportsFile;
+import com.exam.restservice.server.logic.exceptions.RecordNotFoundException;
 import common.constant.CommonNames;
 import common.models.Airport;
 import common.wrapper.Wrapper;
@@ -8,10 +12,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import restserviceg.decorator.Decorator;
-import restserviceg.decorator.NeDecorator;
-import restserviceg.logic.LookupOnAirportsFile;
-import restserviceg.logic.exceptions.RecordNotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;

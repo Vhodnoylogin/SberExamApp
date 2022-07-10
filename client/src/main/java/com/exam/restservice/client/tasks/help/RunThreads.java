@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -32,32 +31,21 @@ public class RunThreads {
         ForkJoinPool forkJoinPool = new ForkJoinPool(NUM_OF_EXECUTORS);
         try {
             int countSucceed = forkJoinPool.submit(
-                            () -> iterator.parallelStream()
-                                    .map(x -> new HashMap<String, Object>() {{
-                                        put(key, x);
-                                    }})
-                                    .peek(x -> x.putAll(constParams))
-                                    .map(funnc)
-                                    .reduce(
-                                            new AtomicInteger()
-                                            , (acc, x) -> {
-                                                acc.addAndGet(x ? 1 : 0);
-                                                return acc;
-                                            }
-                                            , (x, y) -> {
-                                                x.addAndGet(y.get());
-                                                return x;
-                                            }
-                                    )
-                    ).get()
-                    .get();
+                    () -> iterator.parallelStream()
+                            .map(x -> new HashMap<String, Object>() {{
+                                put(key, x);
+                            }})
+                            .peek(x -> x.putAll(constParams))
+                            .map(funnc)
+                            .reduce(0, (acc, x) -> acc += (x ? 1 : 0), Integer::sum)
+            ).get();
             logger.info("Success task number = " + countSucceed);
         } catch (InterruptedException | ExecutionException e) {
             logger.error(e);
         }
     }
 
-//    public static void old(){
+    public static void old() {
 ////        ExecutorService pool = Executors.newFixedThreadPool(2);
 ////        List<Future<Boolean>> futures = LongStream.rangeClosed(1, n).boxed()
 ////                .map(
@@ -87,5 +75,5 @@ public class RunThreads {
 ////        }
 ////        System.out.println("Success task number = " + countSucceed);
 ////        pool.shutdown();
-//    }
+    }
 }

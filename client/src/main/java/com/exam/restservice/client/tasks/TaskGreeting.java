@@ -64,6 +64,7 @@ public class TaskGreeting {
                 , TaskGreeting::runningPart
                 , "QQL"
                 , List.of(1, 2, 3)
+//                , List.of(1,2)
         );
     }
 }

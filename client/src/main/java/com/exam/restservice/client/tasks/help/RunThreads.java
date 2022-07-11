@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class RunThreads {
-    protected static int NUM_OF_EXECUTORS = 2;
+    protected static int NUM_OF_EXECUTORS = 4;
 
     public static void run(
             Logger logger
